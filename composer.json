@@ -1,0 +1,33 @@
+{
+    "name": "uncgits/canvas-api-php-library",
+    "type": "library",
+    "description": "PHP Library used to interact with the Canvas API for UNCG",
+    "keywords": [
+        "uncg",
+        "uncgits",
+        "canvas",
+        "api",
+        "php",
+        "instructure"
+    ],
+    "homepage": "https://bitbucket.org/uncgits/canvas-api-php-library",
+    "authors": [
+        {
+            "name": "UNCG Laravel Developers",
+            "email": "its-laravel-devs-l@uncg.edu",
+            "homepage": "http://its.uncg.edu",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0.0",
+        "nesbot/carbon": ">=1.22.0",
+        "guzzlehttp/guzzle": "6.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Uncgits\\CanvasApi\\": "src/"
+        }
+    }
+}

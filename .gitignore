@@ -1,0 +1,6 @@
+.phpstorm*
+_ide_helper*
+.DS_Store
+/.idea
+/.vscode
+/.vagrant
