@@ -2,7 +2,7 @@
 
 namespace Uncgits\CanvasApi;
 
-abstract class CanvasApi
+class CanvasApiConfig
 {
     /*
     |--------------------------------------------------------------------------
@@ -56,13 +56,6 @@ abstract class CanvasApi
      * @var integer
      */
     private $maxResults = 0;
-
-    /**
-     * The properties required to be set on the Client class in order to make a call to the API.
-     *
-     * @var array
-     */
-    protected $requiredProperties = ['apiHost', 'token'];
 
     /*
     |--------------------------------------------------------------------------
