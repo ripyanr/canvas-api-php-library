@@ -6,7 +6,7 @@ use Uncgits\CanvasApi\CanvasApiClient;
 use Uncgits\CanvasApi\CanvasApiResult;
 
 /**
- * https://canvas.instructure.com/doc/api/accounts.html
+ * https://canvas.instructure.com/doc/api/users.html
  */
 class Users extends CanvasApiClient
 {

@@ -84,26 +84,65 @@ abstract class CanvasApiClient
 
     /*
     |--------------------------------------------------------------------------
+    | Getters
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get for POST requests, these will be sent in the body.
+     *
+     * @return  array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | User-callable methods
     |--------------------------------------------------------------------------
     */
 
     /**
+     * Adds a parameter to the current call stack, without completely overwriting existing parameters
+     *
+     * @param array $parameters
+     * @return self
+     */
+    public function addParameters(array $parameters)
+    {
+        $this->parameters = array_merge($this->parameters, $parameters);
+        return $this;
+    }
+
+    /**
+     * Gets one single parameter, if it exists
+     *
+     * @param mixed $key
+     * @return mixed
+     */
+    public function getParameter($key)
+    {
+        return $this->parameters[$key] ?? null;
+    }
+
+    /**
      * Act as another user in Canvas for the duration of the operation
      *
      * @param mixed $user_id
-     * @return void
+     * @return self
      */
     public function asUserId($user_id)
     {
-        return $this->setParameters(array_merge($this->parameters, ['as_user_id' => $user_id]));
+        return $this->addParameters(['as_user_id', $user_id]);
     }
 
     /**
      * Alias for asUserId()
      *
      * @param mixed $user_id
-     * @return void
+     * @return self
      */
     public function asUser($user_id)
     {
