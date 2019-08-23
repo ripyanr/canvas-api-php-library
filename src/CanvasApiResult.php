@@ -92,8 +92,13 @@ class CanvasApiResult
      */
     public function setCalls(array $calls)
     {
+        // check for single call from call() vs. array of calls from paginate()
+        if (isset($calls['request']) && isset($calls['response'])) {
+            $calls = [$calls];
+        }
+
         $this->calls = $calls;
-        return $this->parseCalls();
+        return $this;
     }
 
     /**
@@ -122,6 +127,14 @@ class CanvasApiResult
         return $this;
     }
 
+    public function __construct(array $calls)
+    {
+        // set the calls
+        $this->setCalls($calls);
+        // parse calls to get results and content
+        $this->parseCalls($calls);
+    }
+
     public function parseCalls()
     {
         // parse content
@@ -130,6 +143,14 @@ class CanvasApiResult
         foreach ($this->calls as $call) {
             if ($call['response']['code'] >= 400) {
                 $failedCalls[] = $call;
+            }
+
+            if (isset($call['response']['body']) && !empty($call['response']['body'])) {
+                if (is_object($call['response']['body'])) {
+                    $this->content = $call['response']['body'];
+                } else {
+                    $this->content = array_merge($this->content, $call['response']['body']);
+                }
             }
         }
 

@@ -131,6 +131,12 @@ abstract class CanvasApiClient
         // perform the call
         $response = $client->$method($endpoint, $requestOptions);
 
+        // clean up parameters unless this was called by paginate()
+        $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
+        if ($caller !== 'paginate') {
+            $this->setParameters([]);
+        }
+
         // normalize the result
         return [
             'request' => [
@@ -155,9 +161,14 @@ abstract class CanvasApiClient
         $calls[] = $result = $this->call($endpoint, $method);
         if (!is_null($result['response']['pagination'])) {
             if (isset($result['response']['pagination']['next']) || $result['response']['pagination']['current'] != $result['response']['pagination']['last']) {
-                return $this->paginate($result['response']['paginationHeaders']['next'], $method, $calls);
+                $nextEndpoint = str_replace($this->config->getPrefix(), '', $result['response']['pagination']['next']);
+                return $this->paginate($nextEndpoint, $method, $calls);
             }
         }
+
+        // clean up parameters
+        $this->setParameters([]);
+
         return $calls;
     }
 
