@@ -16,15 +16,13 @@ class Users extends CanvasApiClient
     |--------------------------------------------------------------------------
     */
 
-    public function listUsersInAccount($account_id, $parameters = [])
+    public function listUsersInAccount($account_id)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->paginate('accounts/' . $account_id . '/users', 'get'));
     }
 
-    public function listActivityStream($parameters = [])
+    public function listActivityStream()
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->paginate('users/self/activity_stream', 'get'));
     }
 
@@ -33,15 +31,13 @@ class Users extends CanvasApiClient
         return new CanvasApiResult($this->paginate('users/self/activity_stream/summary', 'get'));
     }
 
-    public function listTodoItems($parameters = [])
+    public function listTodoItems()
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->paginate('users/self/todo', 'get'));
     }
 
-    public function listCountsForTodoItems($parameters = [])
+    public function listCountsForTodoItems()
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->paginate('users/self/todo_item_count', 'get'));
     }
 
@@ -50,9 +46,8 @@ class Users extends CanvasApiClient
         return new CanvasApiResult($this->paginate('users/self/upcoming_events', 'get'));
     }
 
-    public function listMissingSubmissions($user_id = 'self', $parameters = [])
+    public function listMissingSubmissions($user_id = 'self')
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->paginate('users/' . $user_id . '/missing_submissions', 'get'));
     }
 
@@ -71,21 +66,18 @@ class Users extends CanvasApiClient
         // TODO: multi-step process to get AWS address and key - skip for now.
     }
 
-    public function showUserDetails($id = 'self', $parameters = [])
+    public function showUserDetails($id = 'self')
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('users/' . $id, 'get'));
     }
 
-    public function createUser($account_id, $parameters = [])
+    public function createUser($account_id)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('accounts/' . $account_id . '/users', 'post'));
     }
 
-    public function selfRegisterUser($account_id, $parameters = [])
+    public function selfRegisterUser($account_id)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('accounts/' . $account_id . '/self_registration', 'post'));
     }
 
@@ -94,9 +86,8 @@ class Users extends CanvasApiClient
         return new CanvasApiResult($this->call('users/' . $id . '/settings', 'get'));
     }
 
-    public function updateUserSettings($id = 'self', $parameters = [])
+    public function updateUserSettings($id = 'self')
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('users/' . $id . '/settings', 'put'));
     }
 
@@ -110,9 +101,8 @@ class Users extends CanvasApiClient
         return new CanvasApiResult($this->call('users/' . $id . '/colors/' . $asset_string, 'get'));
     }
 
-    public function updateCustomColor($id = 'self', $asset_string, $parameters = [])
+    public function updateCustomColor($id = 'self', $asset_string)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('users/' . $id . '/colors/' . $asset_string, 'put'));
     }
 
@@ -123,15 +113,13 @@ class Users extends CanvasApiClient
     }
 
     // NOTE - listed as BETA endpoint
-    public function updateDashboardPositions($id = 'self', $parameters = [])
+    public function updateDashboardPositions($id = 'self')
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('users/' . $id . '/dashboard_positions', 'put'));
     }
 
-    public function editUser($id = 'self', $parameters = [])
+    public function editUser($id = 'self')
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('users/' . $id, 'put'));
     }
 
@@ -151,9 +139,8 @@ class Users extends CanvasApiClient
         return new CanvasApiResult($this->call('users/' . $id . '/split', 'post'));
     }
 
-    public function getPandataEventsJwtToken($parameters = [])
+    public function getPandataEventsJwtToken()
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('users/self/pandata_events_token', 'post'));
     }
 
@@ -167,27 +154,23 @@ class Users extends CanvasApiClient
         return new CanvasApiResult($this->call('users/' . $user_id . '/avatars', 'get'));
     }
 
-    public function listUserPageViews($user_id = 'self', $parameters = [])
+    public function listUserPageViews($user_id = 'self')
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->paginate('users/' . $user_id . '/page_views', 'get'));
     }
 
-    public function storeCustomData($user_id = 'self', $scope = null, $parameters = [])
+    public function storeCustomData($user_id = 'self', $scope = null)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('users/' . $user_id . '/custom_data' . $this->applyScope($scope), 'put'));
     }
 
-    public function loadCustomData($user_id = 'self', $scope = null, $parameters = [])
+    public function loadCustomData($user_id = 'self', $scope = null)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('users/' . $user_id . '/custom_data' . $this->applyScope($scope), 'get'));
     }
 
-    public function deleteCustomData($user_id = 'self', $scope = null, $parameters = [])
+    public function deleteCustomData($user_id = 'self', $scope = null)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('users/' . $user_id . '/custom_data' . $this->applyScope($scope), 'delete'));
     }
 
@@ -201,9 +184,8 @@ class Users extends CanvasApiClient
         return new CanvasApiResult($this->paginate('users/self/course_nicknames/' . $course_id, 'get'));
     }
 
-    public function setCourseNickname($course_id, $parameters = [])
+    public function setCourseNickname($course_id)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->paginate('users/self/course_nicknames/' . $course_id, 'put'));
     }
 

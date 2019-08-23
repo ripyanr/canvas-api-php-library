@@ -16,9 +16,8 @@ class Accounts extends CanvasApiClient
     |--------------------------------------------------------------------------
     */
 
-    public function listAccounts($parameters = [])
+    public function listAccounts()
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->paginate('accounts', 'get'));
     }
 
@@ -27,15 +26,13 @@ class Accounts extends CanvasApiClient
         return new CanvasApiResult($this->call('accounts/' . $id, 'get'));
     }
 
-    public function getPermissions($account_id, $parameters = [])
+    public function getPermissions($account_id)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('accounts/' . $account_id . '/permissions', 'get'));
     }
 
-    public function getSubaccounts($account_id, $parameters = [])
+    public function getSubaccounts($account_id)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->paginate('accounts/' . $account_id . '/sub_accounts', 'get'));
     }
 
@@ -49,15 +46,13 @@ class Accounts extends CanvasApiClient
         return new CanvasApiResult($this->call('accounts/' . $account_id . '/help_links', 'get'));
     }
 
-    public function getActiveCourses($account_id, $parameters = [])
+    public function getActiveCourses($account_id)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->paginate('accounts/' . $account_id . '/courses', 'get'));
     }
 
-    public function updateAccount($id, $parameters = [])
+    public function updateAccount($id)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('accounts/' . $id, 'put'));
     }
 
@@ -66,9 +61,8 @@ class Accounts extends CanvasApiClient
         return new CanvasApiResult($this->call('accounts/' . $account_id . '/users/' . $user_id, 'delete'));
     }
 
-    public function createSubaccount($account_id, $parameters = [])
+    public function createSubaccount($account_id)
     {
-        $this->setParameters($parameters);
         return new CanvasApiResult($this->call('accounts/' . $account_id . '/sub_accounts', 'post'));
     }
 

@@ -44,22 +44,29 @@ abstract class CanvasApiClient
 
     /*
     |--------------------------------------------------------------------------
+    | Constructor
+    |--------------------------------------------------------------------------
+    */
+    public function __construct(CanvasApiConfig $config)
+    {
+        $this->config = $config;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Setters
     |--------------------------------------------------------------------------
     */
-
 
     /**
      * Set $additionalHeaders
      *
      * @param  array  $additionalHeaders  Additional headers to send with the call. Bearer token will always be sent.
-     *
      * @return  self
      */
     public function setAdditionalHeaders(array $additionalHeaders)
     {
         $this->additionalHeaders = $additionalHeaders;
-
         return $this;
     }
 
@@ -67,27 +74,49 @@ abstract class CanvasApiClient
      * Set $parameters
      *
      * @param  array  $parameters - refer to the API documentation for the requirements of each call
-     *
      * @return  self
      */
     public function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
-
         return $this;
     }
+
     /*
     |--------------------------------------------------------------------------
-    | Methods
+    | User-callable methods
     |--------------------------------------------------------------------------
     */
 
-    public function __construct(CanvasApiConfig $config)
+    /**
+     * Act as another user in Canvas for the duration of the operation
+     *
+     * @param mixed $user_id
+     * @return void
+     */
+    public function asUserId($user_id)
     {
-        $this->config = $config;
+        return $this->setParameters(array_merge($this->parameters, ['as_user_id' => $user_id]));
     }
 
-    public function call($endpoint, $method)
+    /**
+     * Alias for asUserId()
+     *
+     * @param mixed $user_id
+     * @return void
+     */
+    public function asUser($user_id)
+    {
+        return $this->asUserId($user_id);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | API Call methods
+    |--------------------------------------------------------------------------
+    */
+
+    protected function call($endpoint, $method)
     {
         foreach ($this->requiredProperties as $property) {
             if ($this->$property === null || empty($this->$property)) {
@@ -156,7 +185,7 @@ abstract class CanvasApiClient
         ];
     }
 
-    public function paginate($endpoint, $method, $calls = [])
+    protected function paginate($endpoint, $method, $calls = [])
     {
         $calls[] = $result = $this->call($endpoint, $method);
         if (!is_null($result['response']['pagination'])) {
@@ -174,7 +203,7 @@ abstract class CanvasApiClient
 
     /*
     |--------------------------------------------------------------------------
-    | Helpers
+    | Helper methods
     |--------------------------------------------------------------------------
     */
 
