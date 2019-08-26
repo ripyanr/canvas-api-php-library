@@ -18,56 +18,56 @@ class Accounts extends CanvasApiClient
 
     public function listAccounts()
     {
-        return new CanvasApiResult($this->paginate('accounts', 'get'));
+        return new CanvasApiResult($this->get('accounts'));
     }
 
     public function getAccount($id)
     {
-        return new CanvasApiResult($this->call('accounts/' . $id, 'get'));
+        return new CanvasApiResult($this->get('accounts/' . $id));
     }
 
     public function getPermissions($account_id)
     {
-        return new CanvasApiResult($this->call('accounts/' . $account_id . '/permissions', 'get'));
+        return new CanvasApiResult($this->get('accounts/' . $account_id . '/permissions'));
     }
 
     public function getSubaccounts($account_id)
     {
-        return new CanvasApiResult($this->paginate('accounts/' . $account_id . '/sub_accounts', 'get'));
+        return new CanvasApiResult($this->get('accounts/' . $account_id . '/sub_accounts'));
     }
 
     public function getTermsOfService($account_id)
     {
-        return new CanvasApiResult($this->call('accounts/' . $account_id . '/terms_of_service', 'get'));
+        return new CanvasApiResult($this->get('accounts/' . $account_id . '/terms_of_service'));
     }
 
     public function getHelpLinks($account_id)
     {
-        return new CanvasApiResult($this->call('accounts/' . $account_id . '/help_links', 'get'));
+        return new CanvasApiResult($this->get('accounts/' . $account_id . '/help_links'));
     }
 
     public function getActiveCourses($account_id)
     {
-        return new CanvasApiResult($this->paginate('accounts/' . $account_id . '/courses', 'get'));
+        return new CanvasApiResult($this->get('accounts/' . $account_id . '/courses'));
     }
 
     public function updateAccount($id)
     {
-        return new CanvasApiResult($this->call('accounts/' . $id, 'put'));
+        return new CanvasApiResult($this->put('accounts/' . $id));
     }
 
     public function deleteUserFromRootAccount($account_id, $user_id)
     {
-        return new CanvasApiResult($this->call('accounts/' . $account_id . '/users/' . $user_id, 'delete'));
+        return new CanvasApiResult($this->delete('accounts/' . $account_id . '/users/' . $user_id));
     }
 
     public function createSubaccount($account_id)
     {
-        return new CanvasApiResult($this->call('accounts/' . $account_id . '/sub_accounts', 'post'));
+        return new CanvasApiResult($this->post('accounts/' . $account_id . '/sub_accounts'));
     }
 
     public function deleteSubaccount($account_id, $id)
     {
-        return new CanvasApiResult($this->call('accounts/' . $account_id . '/sub_accounts/' . $id, 'delete'));
+        return new CanvasApiResult($this->delete('accounts/' . $account_id . '/sub_accounts/' . $id));
     }
 }

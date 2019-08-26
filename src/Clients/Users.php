@@ -18,47 +18,47 @@ class Users extends CanvasApiClient
 
     public function listUsersInAccount($account_id)
     {
-        return new CanvasApiResult($this->paginate('accounts/' . $account_id . '/users', 'get'));
+        return new CanvasApiResult($this->get('accounts/' . $account_id . '/users'));
     }
 
     public function listActivityStream()
     {
-        return new CanvasApiResult($this->paginate('users/self/activity_stream', 'get'));
+        return new CanvasApiResult($this->get('users/self/activity_stream'));
     }
 
     public function activityStreamSummary()
     {
-        return new CanvasApiResult($this->paginate('users/self/activity_stream/summary', 'get'));
+        return new CanvasApiResult($this->get('users/self/activity_stream/summary'));
     }
 
     public function listTodoItems()
     {
-        return new CanvasApiResult($this->paginate('users/self/todo', 'get'));
+        return new CanvasApiResult($this->get('users/self/todo'));
     }
 
     public function listCountsForTodoItems()
     {
-        return new CanvasApiResult($this->paginate('users/self/todo_item_count', 'get'));
+        return new CanvasApiResult($this->get('users/self/todo_item_count'));
     }
 
     public function listUpcomingAssignmentsAndCalendarEvents()
     {
-        return new CanvasApiResult($this->paginate('users/self/upcoming_events', 'get'));
+        return new CanvasApiResult($this->get('users/self/upcoming_events'));
     }
 
     public function listMissingSubmissions($user_id = 'self')
     {
-        return new CanvasApiResult($this->paginate('users/' . $user_id . '/missing_submissions', 'get'));
+        return new CanvasApiResult($this->get('users/' . $user_id . '/missing_submissions'));
     }
 
     public function hideStreamItem($id)
     {
-        return new CanvasApiResult($this->call('users/self/activity_stream/' . $id, 'delete'));
+        return new CanvasApiResult($this->delete('users/self/activity_stream/' . $id));
     }
 
     public function hideAllStreamItems()
     {
-        return new CanvasApiResult($this->call('users/self/activity_stream', 'delete'));
+        return new CanvasApiResult($this->delete('users/self/activity_stream'));
     }
 
     public function uploadFile($user_id, $local_file_path)
@@ -68,135 +68,135 @@ class Users extends CanvasApiClient
 
     public function showUserDetails($id = 'self')
     {
-        return new CanvasApiResult($this->call('users/' . $id, 'get'));
+        return new CanvasApiResult($this->get('users/' . $id));
     }
 
     public function createUser($account_id)
     {
-        return new CanvasApiResult($this->call('accounts/' . $account_id . '/users', 'post'));
+        return new CanvasApiResult($this->post('accounts/' . $account_id . '/users'));
     }
 
     public function selfRegisterUser($account_id)
     {
-        return new CanvasApiResult($this->call('accounts/' . $account_id . '/self_registration', 'post'));
+        return new CanvasApiResult($this->post('accounts/' . $account_id . '/self_registration'));
     }
 
     public function getUserSettings($id = 'self')
     {
-        return new CanvasApiResult($this->call('users/' . $id . '/settings', 'get'));
+        return new CanvasApiResult($this->get('users/' . $id . '/settings'));
     }
 
     public function updateUserSettings($id = 'self')
     {
-        return new CanvasApiResult($this->call('users/' . $id . '/settings', 'put'));
+        return new CanvasApiResult($this->put('users/' . $id . '/settings'));
     }
 
     public function getCustomColors($id = 'self')
     {
-        return new CanvasApiResult($this->call('users/' . $id . '/colors', 'get'));
+        return new CanvasApiResult($this->get('users/' . $id . '/colors'));
     }
 
     public function getCustomColor($id = 'self', $asset_string)
     {
-        return new CanvasApiResult($this->call('users/' . $id . '/colors/' . $asset_string, 'get'));
+        return new CanvasApiResult($this->get('users/' . $id . '/colors/' . $asset_string));
     }
 
     public function updateCustomColor($id = 'self', $asset_string)
     {
-        return new CanvasApiResult($this->call('users/' . $id . '/colors/' . $asset_string, 'put'));
+        return new CanvasApiResult($this->put('users/' . $id . '/colors/' . $asset_string));
     }
 
     // NOTE - listed as BETA endpoint
     public function getDashboardPositions($id = 'self')
     {
-        return new CanvasApiResult($this->call('users/' . $id . '/dashboard_positions', 'get'));
+        return new CanvasApiResult($this->get('users/' . $id . '/dashboard_positions'));
     }
 
     // NOTE - listed as BETA endpoint
     public function updateDashboardPositions($id = 'self')
     {
-        return new CanvasApiResult($this->call('users/' . $id . '/dashboard_positions', 'put'));
+        return new CanvasApiResult($this->put('users/' . $id . '/dashboard_positions'));
     }
 
     public function editUser($id = 'self')
     {
-        return new CanvasApiResult($this->call('users/' . $id, 'put'));
+        return new CanvasApiResult($this->put('users/' . $id));
     }
 
     public function mergeUserIntoAnotherUser($id, $destination_user_id, $destination_account_id = null)
     {
         if (!is_null($destination_account_id)) {
             return new CanvasApiResult(
-                $this->call('users/' . $id . '/merge_into/accounts/' . $destination_account_id .
-                    '/users/' . $destination_user_id, 'put')
+                $this->put('users/' . $id . '/merge_into/accounts/' . $destination_account_id .
+                    '/users/' . $destination_user_id)
             );
         }
-        return new CanvasApiResult($this->call('users/' . $id . '/merge_into/' . $destination_user_id, 'put'));
+        return new CanvasApiResult($this->put('users/' . $id . '/merge_into/' . $destination_user_id));
     }
 
     public function splitMergedUsersIntoSeparateUsers($id)
     {
-        return new CanvasApiResult($this->call('users/' . $id . '/split', 'post'));
+        return new CanvasApiResult($this->post('users/' . $id . '/split'));
     }
 
     public function getPandataEventsJwtToken()
     {
-        return new CanvasApiResult($this->call('users/self/pandata_events_token', 'post'));
+        return new CanvasApiResult($this->post('users/self/pandata_events_token'));
     }
 
     public function getMostRecentlyGradedSubmissions($id = 'self')
     {
-        return new CanvasApiResult($this->call('users/' . $id . '/graded_submissions', 'get'));
+        return new CanvasApiResult($this->get('users/' . $id . '/graded_submissions'));
     }
 
     public function listAvaterOptions($user_id = 'self')
     {
-        return new CanvasApiResult($this->call('users/' . $user_id . '/avatars', 'get'));
+        return new CanvasApiResult($this->get('users/' . $user_id . '/avatars'));
     }
 
     public function listUserPageViews($user_id = 'self')
     {
-        return new CanvasApiResult($this->paginate('users/' . $user_id . '/page_views', 'get'));
+        return new CanvasApiResult($this->get('users/' . $user_id . '/page_views'));
     }
 
     public function storeCustomData($user_id = 'self', $scope = null)
     {
-        return new CanvasApiResult($this->call('users/' . $user_id . '/custom_data' . $this->applyScope($scope), 'put'));
+        return new CanvasApiResult($this->put('users/' . $user_id . '/custom_data' . $this->applyScope($scope)));
     }
 
     public function loadCustomData($user_id = 'self', $scope = null)
     {
-        return new CanvasApiResult($this->call('users/' . $user_id . '/custom_data' . $this->applyScope($scope), 'get'));
+        return new CanvasApiResult($this->get('users/' . $user_id . '/custom_data' . $this->applyScope($scope)));
     }
 
     public function deleteCustomData($user_id = 'self', $scope = null)
     {
-        return new CanvasApiResult($this->call('users/' . $user_id . '/custom_data' . $this->applyScope($scope), 'delete'));
+        return new CanvasApiResult($this->delete('users/' . $user_id . '/custom_data' . $this->applyScope($scope)));
     }
 
     public function listCourseNicknames()
     {
-        return new CanvasApiResult($this->paginate('users/self/course_nicknames', 'get'));
+        return new CanvasApiResult($this->get('users/self/course_nicknames'));
     }
 
     public function getCourseNickname($course_id)
     {
-        return new CanvasApiResult($this->paginate('users/self/course_nicknames/' . $course_id, 'get'));
+        return new CanvasApiResult($this->get('users/self/course_nicknames/' . $course_id));
     }
 
     public function setCourseNickname($course_id)
     {
-        return new CanvasApiResult($this->paginate('users/self/course_nicknames/' . $course_id, 'put'));
+        return new CanvasApiResult($this->put('users/self/course_nicknames/' . $course_id));
     }
 
     public function removeCourseNickname($course_id)
     {
-        return new CanvasApiResult($this->paginate('users/self/course_nicknames/' . $course_id, 'delete'));
+        return new CanvasApiResult($this->delete('users/self/course_nicknames/' . $course_id));
     }
 
     public function clearCourseNicknames()
     {
-        return new CanvasApiResult($this->paginate('users/self/course_nicknames', 'delete'));
+        return new CanvasApiResult($this->delete('users/self/course_nicknames'));
     }
 
     /*

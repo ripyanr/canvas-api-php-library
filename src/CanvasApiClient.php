@@ -155,7 +155,7 @@ abstract class CanvasApiClient
     |--------------------------------------------------------------------------
     */
 
-    protected function call($endpoint, $method)
+    protected function makeCall($endpoint, $method)
     {
         foreach ($this->requiredProperties as $property) {
             if ($this->$property === null || empty($this->$property)) {
@@ -200,10 +200,10 @@ abstract class CanvasApiClient
         $response = $client->$method($endpoint, $requestOptions);
 
         // clean up parameters unless this was called by paginate()
-        $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
-        if ($caller !== 'paginate') {
-            $this->setParameters([]);
-        }
+        // $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
+        // if ($caller !== 'paginate') {
+        //     $this->setParameters([]);
+        // }
 
         // normalize the result
         return [
@@ -224,13 +224,13 @@ abstract class CanvasApiClient
         ];
     }
 
-    protected function paginate($endpoint, $method, $calls = [])
+    protected function call($endpoint, $method, $calls = [])
     {
-        $calls[] = $result = $this->call($endpoint, $method);
+        $calls[] = $result = $this->makeCall($endpoint, $method);
         if (!is_null($result['response']['pagination'])) {
             if (isset($result['response']['pagination']['next']) || $result['response']['pagination']['current'] != $result['response']['pagination']['last']) {
                 $nextEndpoint = str_replace($this->config->getPrefix(), '', $result['response']['pagination']['next']);
-                return $this->paginate($nextEndpoint, $method, $calls);
+                return $this->call($nextEndpoint, $method, $calls);
             }
         }
 
@@ -238,6 +238,31 @@ abstract class CanvasApiClient
         $this->setParameters([]);
 
         return $calls;
+    }
+
+    protected function get($endpoint)
+    {
+        return $this->call($endpoint, 'get');
+    }
+
+    protected function post($endpoint)
+    {
+        return $this->call($endpoint, 'post');
+    }
+
+    protected function patch($endpoint)
+    {
+        return $this->call($endpoint, 'patch');
+    }
+
+    protected function put($endpoint)
+    {
+        return $this->call($endpoint, 'put');
+    }
+
+    protected function delete($endpoint)
+    {
+        return $this->call($endpoint, 'delete');
     }
 
     /*
