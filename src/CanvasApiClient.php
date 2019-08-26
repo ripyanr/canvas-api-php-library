@@ -216,11 +216,14 @@ abstract class CanvasApiClient
                 'parameters' => $this->parameters,
             ],
             'response' => [
-                'headers'    => $response->getHeaders(),
-                'pagination' => $this->parse_http_rels($response->getHeaders()),
-                'code'       => $response->getStatusCode(),
-                'reason'     => $response->getReasonPhrase(),
-                'body'       => json_decode($response->getBody()->getContents())
+                'headers'              => $response->getHeaders(),
+                'pagination'           => $this->parse_http_rels($response->getHeaders()),
+                'code'                 => $response->getStatusCode(),
+                'reason'               => $response->getReasonPhrase(),
+                'runtime'              => $response->getHeader('X-Runtime') ?? '',
+                'cost'                 => $response->getHeader('X-Request-Cost') ?? '',
+                'rate-limit-remaining' => $response->getHeader('X-Rate-Limit-Remaining') ?? '',
+                'body'                 => json_decode($response->getBody()->getContents())
             ],
         ];
     }
@@ -277,7 +280,7 @@ abstract class CanvasApiClient
     |--------------------------------------------------------------------------
     */
 
-    private function validateParameters()
+    protected function validateParameters()
     {
         // parameters will only ever be 2 levels deep - i.e. enrollment[user_id]
         // therefore we can expect at most one dot when using dot syntax
@@ -296,7 +299,7 @@ abstract class CanvasApiClient
         }
     }
 
-    private function parse_http_rels($allHeaders)
+    protected function parse_http_rels($allHeaders)
     {
         if (!isset($allHeaders['Link'][0])) {
             return null;

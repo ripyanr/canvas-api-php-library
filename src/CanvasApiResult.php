@@ -18,28 +18,28 @@ class CanvasApiResult
      *
      * @var array
      */
-    private $calls = [];
+    protected $calls = [];
 
     /**
      * The overall status of the API resultset
      *
      * @var string
      */
-    private $status = '';
+    protected $status = '';
 
     /**
      * Longer message representing the status of the API resultset
      *
      * @var string
      */
-    private $message = '';
+    protected $message = '';
 
     /**
      * A collection of Canvas Resources obtained in this resultset
      *
      * @var array
      */
-    public $content = [];
+    protected $content = [];
 
     /*
     |--------------------------------------------------------------------------
@@ -55,6 +55,26 @@ class CanvasApiResult
     public function getCalls()
     {
         return $this->calls;
+    }
+
+    /**
+     * Get the last API call made for this resultset
+     *
+     * @return  array
+     */
+    public function getLastCall()
+    {
+        return $this->calls[] = array_pop($this->calls);
+    }
+
+    /**
+     * Get the first API call made for this resultset
+     *
+     * @return  array
+     */
+    public function getFirstCall()
+    {
+        return $this->calls[0];
     }
 
     /**
@@ -75,6 +95,16 @@ class CanvasApiResult
     public function getMessage()
     {
         return $this->message;
+    }
+
+    /**
+     * Get content of the resultset
+     *
+     * @return  array
+     */
+    public function getContent()
+    {
+        return $this->content;
     }
 
     /*
