@@ -73,11 +73,13 @@ class Users extends CanvasApiClient
 
     public function createUser($account_id)
     {
+        $this->setRequiredParameters(['pseudonym.unique_id']);
         return new CanvasApiResult($this->post('accounts/' . $account_id . '/users'));
     }
 
     public function selfRegisterUser($account_id)
     {
+        $this->setRequiredParameters(['user.name', 'user.terms_of_use', 'pseudonym.unique_id']);
         return new CanvasApiResult($this->post('accounts/' . $account_id . '/self_registration'));
     }
 
@@ -161,16 +163,19 @@ class Users extends CanvasApiClient
 
     public function storeCustomData($user_id = 'self', $scope = null)
     {
+        $this->setRequiredParameters(['ns', 'data']);
         return new CanvasApiResult($this->put('users/' . $user_id . '/custom_data' . $this->applyScope($scope)));
     }
 
     public function loadCustomData($user_id = 'self', $scope = null)
     {
+        $this->setRequiredParameters(['ns']);
         return new CanvasApiResult($this->get('users/' . $user_id . '/custom_data' . $this->applyScope($scope)));
     }
 
     public function deleteCustomData($user_id = 'self', $scope = null)
     {
+        $this->setRequiredParameters(['ns']);
         return new CanvasApiResult($this->delete('users/' . $user_id . '/custom_data' . $this->applyScope($scope)));
     }
 
@@ -186,6 +191,7 @@ class Users extends CanvasApiClient
 
     public function setCourseNickname($course_id)
     {
+        $this->setRequiredParameters(['nickname']);
         return new CanvasApiResult($this->put('users/self/course_nicknames/' . $course_id));
     }
 

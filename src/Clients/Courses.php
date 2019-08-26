@@ -74,6 +74,7 @@ class Courses extends CanvasApiClient
 
     public function deleteOrConcludeCourse($course_id)
     {
+        $this->setRequiredParameters(['event']);
         return new CanvasApiResult($this->delete('courses/' . $course_id));
     }
 
@@ -117,6 +118,7 @@ class Courses extends CanvasApiClient
     public function updateCourses($account_id)
     {
         // note, must use the progress endpoint to check the status of this.
+        $this->setRequiredParameters(['course_ids', 'event']);
         return new CanvasApiResult($this->put('accounts/' . $account_id . '/courses'));
     }
 

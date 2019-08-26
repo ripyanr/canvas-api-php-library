@@ -3,7 +3,7 @@
 namespace Uncgits\CanvasApi;
 
 use GuzzleHttp\Client;
-use Uncgits\CanvasApi\Exceptions\CanvasApiConfigException;
+use Uncgits\CanvasApi\Exceptions\CanvasApiParameterException;
 
 abstract class CanvasApiClient
 {
@@ -29,18 +29,19 @@ abstract class CanvasApiClient
 
     /**
      * Parameters (arguments) to include in the call. For GET requests, these will be sent in the query string.
-     * For POST requests, these will be sent in the body.
+     *   For POST requests, these will be sent in the body.
      *
      * @var array
      */
     protected $parameters = [];
 
     /**
-     * The properties required to be set on the Client class in order to make a call to the API.
+     * The parameters required by the Canvas API. If these parameters are not set before making the call, a
+     *   CanvasApiParameterException will be thrown.
      *
      * @var array
      */
-    protected $requiredProperties = [];
+    protected $requiredParameters = [];
 
     /*
     |--------------------------------------------------------------------------
@@ -82,6 +83,18 @@ abstract class CanvasApiClient
         return $this;
     }
 
+    /**
+     * Set $requiredParameters
+     *
+     * @param  array  $requiredParameters - refer to the API documentation for the requirements of each call
+     * @return  self
+     */
+    public function setRequiredParameters(array $requiredParameters)
+    {
+        $this->requiredParameters = $requiredParameters;
+        return $this;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Getters
@@ -89,7 +102,7 @@ abstract class CanvasApiClient
     */
 
     /**
-     * Get for POST requests, these will be sent in the body.
+     * Get current parameter set
      *
      * @return  array
      */
@@ -157,12 +170,6 @@ abstract class CanvasApiClient
 
     protected function makeCall($endpoint, $method)
     {
-        foreach ($this->requiredProperties as $property) {
-            if ($this->$property === null || empty($this->$property)) {
-                throw new CanvasApiConfigException("Error: required property '$property' has not been set in API Client class.");
-            }
-        }
-
         // assemble the final request URI from host and endpoint
         $endpoint = 'https://' . $this->config->getApiHost() . $this->config->getPrefix() . $endpoint;
 
@@ -199,12 +206,6 @@ abstract class CanvasApiClient
         // perform the call
         $response = $client->$method($endpoint, $requestOptions);
 
-        // clean up parameters unless this was called by paginate()
-        // $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
-        // if ($caller !== 'paginate') {
-        //     $this->setParameters([]);
-        // }
-
         // normalize the result
         return [
             'request' => [
@@ -226,6 +227,10 @@ abstract class CanvasApiClient
 
     protected function call($endpoint, $method, $calls = [])
     {
+        // set up
+        $this->validateParameters();
+
+        // make the call(s)
         $calls[] = $result = $this->makeCall($endpoint, $method);
         if (!is_null($result['response']['pagination'])) {
             if (isset($result['response']['pagination']['next']) || $result['response']['pagination']['current'] != $result['response']['pagination']['last']) {
@@ -234,8 +239,9 @@ abstract class CanvasApiClient
             }
         }
 
-        // clean up parameters
+        // clean up
         $this->setParameters([]);
+        $this->setRequiredParameters([]);
 
         return $calls;
     }
@@ -270,6 +276,25 @@ abstract class CanvasApiClient
     | Helper methods
     |--------------------------------------------------------------------------
     */
+
+    private function validateParameters()
+    {
+        // parameters will only ever be 2 levels deep - i.e. enrollment[user_id]
+        // therefore we can expect at most one dot when using dot syntax
+
+        foreach ($this->requiredParameters as $required) {
+            list($mainKey, $subKey) = explode('.', $required);
+            if (!isset($this->parameters[$mainKey])) {
+                throw new CanvasApiParameterException('Missing required parameter \'' . $mainKey . '\'');
+            }
+
+            if (isset($subKey)) {
+                if (!isset($this->parameters[$mainKey][$subKey])) {
+                    throw new CanvasApiParameterException('Missing required parameter \'' . $mainKey . '[' . $subKey . ']\'');
+                }
+            }
+        }
+    }
 
     private function parse_http_rels($allHeaders)
     {

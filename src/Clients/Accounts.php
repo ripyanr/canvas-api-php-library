@@ -63,6 +63,7 @@ class Accounts extends CanvasApiClient
 
     public function createSubaccount($account_id)
     {
+        $this->setRequiredParameters(['account.name']);
         return new CanvasApiResult($this->post('accounts/' . $account_id . '/sub_accounts'));
     }
 
