@@ -282,20 +282,19 @@ abstract class CanvasApiClient
 
     protected function validateParameters()
     {
-        // parameters will only ever be 2 levels deep - i.e. enrollment[user_id]
-        // therefore we can expect at most one dot when using dot syntax
-
         foreach ($this->requiredParameters as $required) {
-            list($mainKey, $subKey) = explode('.', $required);
-            if (!isset($this->parameters[$mainKey])) {
-                throw new CanvasApiParameterException('Missing required parameter \'' . $mainKey . '\'');
-            }
-
-            if (isset($subKey)) {
-                if (!isset($this->parameters[$mainKey][$subKey])) {
-                    throw new CanvasApiParameterException('Missing required parameter \'' . $mainKey . '[' . $subKey . ']\'');
+            $value = $this->parameters;
+            $segments = explode('.', $required);
+            $segmentString = $segments[0];
+            foreach ($segments as $key => $segment) {
+                if ($key !== 0) {
+                    $segmentString .= "[$segment]";
                 }
-            }
+                if (!isset($value[$segment])) {
+                    throw new CanvasApiParameterException('Missing required parameter \'' . $segmentString . '\'');
+                }
+                $value = $value[$segment];
+            };
         }
     }
 
