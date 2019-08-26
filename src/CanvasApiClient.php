@@ -148,7 +148,8 @@ abstract class CanvasApiClient
      */
     public function asUserId($user_id)
     {
-        return $this->addParameters(['as_user_id', $user_id]);
+        $this->addParameters(['as_user_id' => $user_id]);
+        return $this;
     }
 
     /**
@@ -184,7 +185,7 @@ abstract class CanvasApiClient
                 $string = preg_replace('/%5B\d+%5D=/', '%5B%5D=', $string);
                 $requestOptions['query'] = $string;
             } else {
-                $requestOptions['form_params'] = $this->parameters;
+                $requestOptions['json'] = $this->parameters;
             }
         }
 
@@ -280,21 +281,49 @@ abstract class CanvasApiClient
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Flatten a multi-dimensional associative array with dots. From Illuminate\Support\Arr
+     *
+     * @param  array   $array
+     * @param  string  $prepend
+     * @return array
+     */
+
+    protected function dot($array, $prepend = '')
+    {
+        $results = [];
+        foreach ($array as $key => $value) {
+            if (is_array($value) && ! empty($value)) {
+                $results = array_merge($results, $this->dot($value, $prepend.$key.'.'));
+            } else {
+                $results[$prepend.$key] = $value;
+            }
+        }
+        return $results;
+    }
+
     protected function validateParameters()
     {
-        foreach ($this->requiredParameters as $required) {
-            $value = $this->parameters;
-            $segments = explode('.', $required);
-            $segmentString = $segments[0];
-            foreach ($segments as $key => $segment) {
-                if ($key !== 0) {
-                    $segmentString .= "[$segment]";
+        // flatten out params array to dot notation for easy checking
+        $parametersDotted = $this->dot($this->parameters);
+
+        $missingRequiredParameters = array_diff($this->requiredParameters, array_keys($parametersDotted));
+
+        $missingRequiredParametersBracketed = [];
+        if (!empty($missingRequiredParameters)) {
+            foreach ($missingRequiredParameters as $parameter) {
+                $segments = explode('.', $parameter);
+                $bracketedName = $segments[0];
+
+                for ($i = 1; $i < count($segments); $i++) {
+                    if (isset($segments[$i])) {
+                        $bracketedName .= "[{$segments[$i]}]";
+                    }
                 }
-                if (!isset($value[$segment])) {
-                    throw new CanvasApiParameterException('Missing required parameter \'' . $segmentString . '\'');
-                }
-                $value = $value[$segment];
-            };
+                $missingRequiredParametersBracketed[] = $bracketedName;
+            }
+
+            throw new CanvasApiParameterException('Missing required parameter(s) \'' . implode(',', $missingRequiredParametersBracketed) . '\'');
         }
     }
 

@@ -151,7 +151,7 @@ class Users extends CanvasApiClient
         return new CanvasApiResult($this->get('users/' . $id . '/graded_submissions'));
     }
 
-    public function listAvaterOptions($user_id = 'self')
+    public function listAvatarOptions($user_id = 'self')
     {
         return new CanvasApiResult($this->get('users/' . $user_id . '/avatars'));
     }
