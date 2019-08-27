@@ -3,6 +3,7 @@
 namespace Uncgits\CanvasApi;
 
 use GuzzleHttp\Client;
+use Uncgits\CanvasApi\Exceptions\CanvasApiConfigException;
 use Uncgits\CanvasApi\Exceptions\CanvasApiParameterException;
 
 abstract class CanvasApiClient
@@ -48,9 +49,18 @@ abstract class CanvasApiClient
     | Constructor
     |--------------------------------------------------------------------------
     */
-    public function __construct(CanvasApiConfig $config)
+    public function __construct($config)
     {
-        $this->config = $config;
+        if (is_string($config) && class_exists($config)) {
+            $config = new $config;
+        }
+
+        if (is_a($config, CanvasApiConfig::class)) {
+            $this->config = $config;
+            return;
+        }
+
+        throw new CanvasApiConfigException('Client class must receive CanvasApiConfig object or class name in constructor');
     }
 
     /*
@@ -163,6 +173,17 @@ abstract class CanvasApiClient
         return $this->asUserId($user_id);
     }
 
+    /**
+     * Shortcut method for setting the 'per_page' parameter
+     *
+     * @param int $per_page
+     * @return self
+     */
+    public function setPerPage(int $per_page)
+    {
+        return $this->addParameters(['per_page' => $per_page]);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | API Call methods
@@ -208,25 +229,7 @@ abstract class CanvasApiClient
         $response = $client->$method($endpoint, $requestOptions);
 
         // normalize the result
-        return [
-            'request' => [
-                'endpoint'   => $endpoint,
-                'method'     => $method,
-                'headers'    => $requestOptions['headers'],
-                'proxy'      => $this->config->getProxy(),
-                'parameters' => $this->parameters,
-            ],
-            'response' => [
-                'headers'              => $response->getHeaders(),
-                'pagination'           => $this->parse_http_rels($response->getHeaders()),
-                'code'                 => $response->getStatusCode(),
-                'reason'               => $response->getReasonPhrase(),
-                'runtime'              => $response->getHeader('X-Runtime') ?? '',
-                'cost'                 => $response->getHeader('X-Request-Cost') ?? '',
-                'rate-limit-remaining' => $response->getHeader('X-Rate-Limit-Remaining') ?? '',
-                'body'                 => json_decode($response->getBody()->getContents())
-            ],
-        ];
+        return $this->normalizeResult($endpoint, $method, $requestOptions, $response);
     }
 
     protected function call($endpoint, $method, $calls = [])
@@ -280,6 +283,38 @@ abstract class CanvasApiClient
     | Helper methods
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Normalizes and formats API call information into an array for convenience
+     *
+     * @param string $endpoint
+     * @param string $method
+     * @param array $requestOptions
+     * @param GuzzleHttp\Psr7\Response $response
+     * @return void
+     */
+    protected function normalizeResult($endpoint, $method, $requestOptions, $response)
+    {
+        return [
+            'request' => [
+                'endpoint'   => $endpoint,
+                'method'     => $method,
+                'headers'    => $requestOptions['headers'],
+                'proxy'      => $this->config->getProxy(),
+                'parameters' => $this->parameters,
+            ],
+            'response' => [
+                'headers'              => $response->getHeaders(),
+                'pagination'           => $this->parse_http_rels($response->getHeaders()),
+                'code'                 => $response->getStatusCode(),
+                'reason'               => $response->getReasonPhrase(),
+                'runtime'              => $response->getHeader('X-Runtime') ?? '',
+                'cost'                 => $response->getHeader('X-Request-Cost') ?? '',
+                'rate-limit-remaining' => $response->getHeader('X-Rate-Limit-Remaining') ?? '',
+                'body'                 => json_decode($response->getBody()->getContents())
+            ],
+        ];
+    }
 
     /**
      * Flatten a multi-dimensional associative array with dots. From Illuminate\Support\Arr

@@ -21,12 +21,29 @@ class Accounts extends CanvasApiClient
         return new CanvasApiResult($this->get('accounts'));
     }
 
-    public function getAccount($id)
+    public function listAccountsForCourseAdmins()
+    {
+        return new CanvasApiResult($this->get('course_accounts'));
+    }
+
+    public function getSingleAccount($id)
     {
         return new CanvasApiResult($this->get('accounts/' . $id));
     }
 
-    public function getPermissions($account_id)
+    // alias
+    public function getAccount($id)
+    {
+        return $this->getSingleAccount($id);
+    }
+
+    public function permissions($account_id)
+    {
+        return new CanvasApiResult($this->get('accounts/' . $account_id . '/permissions'));
+    }
+
+    // alias
+    public function listPermissions($account_id)
     {
         return new CanvasApiResult($this->get('accounts/' . $account_id . '/permissions'));
     }
