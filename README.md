@@ -212,4 +212,18 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 ## 0.1
 
 - First tagged release
--
+- Supports the following operation sets fully:
+    - Account Reports
+    - Accounts
+    - Analytics
+    - Assignments
+    - Enrollments
+    - EnrollmentTerms
+    - Quiz Submissions
+    - Quizzes
+    - Roles
+    - Sections
+    - Tabs
+- Supports the following operation sets nearly-fully (file uploads not yet included):
+    - Courses
+    - Users
