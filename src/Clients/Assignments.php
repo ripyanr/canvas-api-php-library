@@ -45,7 +45,7 @@ class Assignments extends CanvasApiClient
     public function createAssignment($course_id)
     {
         $this->setRequiredParameters(['assignment.name']);
-        return new CanvasApiClient($this->post('courses/' . $course_id . '/assignments'));
+        return new CanvasApiResult($this->post('courses/' . $course_id . '/assignments'));
     }
 
     public function editAssignment($course_id, $id)
