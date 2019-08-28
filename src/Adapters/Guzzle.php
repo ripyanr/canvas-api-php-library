@@ -4,7 +4,6 @@ namespace Uncgits\CanvasApi\Adapters;
 
 use GuzzleHttp\Client;
 use Uncgits\CanvasApi\Traits\ExecutesCanvasApiCalls;
-use Uncgits\CanvasApi\Exceptions\CanvasApiParameterException;
 
 class Guzzle implements CanvasApiAdapter
 {
@@ -16,7 +15,7 @@ class Guzzle implements CanvasApiAdapter
     |--------------------------------------------------------------------------
     */
 
-    public function makeCall($endpoint, $method)
+    public function call($endpoint, $method)
     {
         // assemble the final request URI from host and endpoint
         $endpoint = 'https://' . $this->config->getApiHost() . $this->config->getPrefix() . $endpoint;
@@ -58,17 +57,17 @@ class Guzzle implements CanvasApiAdapter
         return $this->normalizeResult($endpoint, $method, $requestOptions, $response);
     }
 
-    public function call($endpoint, $method, $calls = [])
+    public function transaction($endpoint, $method, $calls = [])
     {
         // set up
         $this->validateParameters();
 
         // make the call(s)
-        $calls[] = $result = $this->makeCall($endpoint, $method);
+        $calls[] = $result = $this->call($endpoint, $method);
         if (!is_null($result['response']['pagination'])) {
             if (isset($result['response']['pagination']['next']) || $result['response']['pagination']['current'] != $result['response']['pagination']['last']) {
                 $nextEndpoint = str_replace($this->config->getPrefix(), '', $result['response']['pagination']['next']);
-                return $this->call($nextEndpoint, $method, $calls);
+                return $this->transaction($nextEndpoint, $method, $calls);
             }
         }
 
@@ -111,30 +110,6 @@ class Guzzle implements CanvasApiAdapter
         ];
     }
 
-    public function validateParameters()
-    {
-        // flatten out params array to dot notation for easy checking
-        $missingRequiredParameters = array_diff($this->requiredParameters, array_keys($this->dot($this->parameters)));
-
-        $missingRequiredParametersBracketed = [];
-        if (!empty($missingRequiredParameters)) {
-            foreach ($missingRequiredParameters as $parameter) {
-                $segments = explode('.', $parameter);
-                $bracketedName = $segments[0];
-
-                for ($i = 1; $i < count($segments); $i++) {
-                    if (isset($segments[$i])) {
-                        $bracketedName .= "[{$segments[$i]}]";
-                    }
-                }
-                $missingRequiredParametersBracketed[] = $bracketedName;
-            }
-
-            throw new CanvasApiParameterException('Missing required parameter(s) \''
-                . implode(',', $missingRequiredParametersBracketed) . '\'');
-        }
-    }
-
     public function parsePagination($allHeaders)
     {
         if (!isset($allHeaders['Link'][0])) {
@@ -171,32 +146,5 @@ class Guzzle implements CanvasApiAdapter
         }
 
         return $paginationHeaders;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Helper methods
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Flatten a multi-dimensional associative array with dots. From Illuminate\Support\Arr
-     *
-     * @param  array   $array
-     * @param  string  $prepend
-     * @return array
-     */
-
-    protected function dot($array, $prepend = '')
-    {
-        $results = [];
-        foreach ($array as $key => $value) {
-            if (is_array($value) && ! empty($value)) {
-                $results = array_merge($results, $this->dot($value, $prepend.$key.'.'));
-            } else {
-                $results[$prepend.$key] = $value;
-            }
-        }
-        return $results;
     }
 }

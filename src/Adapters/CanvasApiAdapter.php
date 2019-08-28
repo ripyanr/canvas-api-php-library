@@ -118,20 +118,21 @@ interface CanvasApiAdapter
      * @param mixed $method
      * @return array
      */
-    public function makeCall($endpoint, $method);
+    public function call($endpoint, $method);
 
     /**
-     * Performs an API call operation. Responsible for setup, pagination, and teardown. Returns an array of normalized calls.
+     * Performs an API transaction (one or more calls). Responsible for setup, pagination, and teardown. Returns an
+     *   array of normalized calls.
      *
      * @param mixed $endpoint
      * @param mixed $method
      * @param mixed $calls
      * @return array
      */
-    public function call($endpoint, $method, $calls = []);
+    public function transaction($endpoint, $method, $calls = []);
 
     /**
-     * Fluent alias for calling call() for a GET operation
+     * Fluent alias for calling transaction() for a GET operation
      *
      * @param mixed $endpoint
      * @return array
@@ -139,7 +140,7 @@ interface CanvasApiAdapter
     public function get($endpoint);
 
     /**
-     * Fluent alias for calling call() for a POST operation
+     * Fluent alias for calling transaction() for a POST operation
      *
      * @param mixed $endpoint
      * @return array
@@ -147,7 +148,7 @@ interface CanvasApiAdapter
     public function post($endpoint);
 
     /**
-     * Fluent alias for calling call() for a PATCH operation
+     * Fluent alias for calling transaction() for a PATCH operation
      *
      * @param mixed $endpoint
      * @return array
@@ -155,7 +156,7 @@ interface CanvasApiAdapter
     public function patch($endpoint);
 
     /**
-     * Fluent alias for calling call() for a PUT operation
+     * Fluent alias for calling transaction() for a PUT operation
      *
      * @param mixed $endpoint
      * @return array
@@ -163,7 +164,7 @@ interface CanvasApiAdapter
     public function put($endpoint);
 
     /**
-     * Fluent alias for calling call() for a DELETE operation
+     * Fluent alias for calling transaction() for a DELETE operation
      *
      * @param mixed $endpoint
      * @return array

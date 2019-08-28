@@ -55,8 +55,6 @@ trait ExecutesCanvasApiCalls
         }
 
         throw new CanvasApiConfigException('Client class must receive CanvasApiConfig object or class name in constructor');
-
-        $this->config = $config;
     }
 
     public function setAdditionalHeaders(array $additionalHeaders)
@@ -95,27 +93,51 @@ trait ExecutesCanvasApiCalls
 
     public function get($endpoint)
     {
-        return $this->call($endpoint, 'get');
+        return $this->transaction($endpoint, 'get');
     }
 
     public function post($endpoint)
     {
-        return $this->call($endpoint, 'post');
+        return $this->transaction($endpoint, 'post');
     }
 
     public function patch($endpoint)
     {
-        return $this->call($endpoint, 'patch');
+        return $this->transaction($endpoint, 'patch');
     }
 
     public function put($endpoint)
     {
-        return $this->call($endpoint, 'put');
+        return $this->transaction($endpoint, 'put');
     }
 
     public function delete($endpoint)
     {
-        return $this->call($endpoint, 'delete');
+        return $this->transaction($endpoint, 'delete');
+    }
+
+    public function validateParameters()
+    {
+        // flatten out params array to dot notation for easy checking
+        $missingRequiredParameters = array_diff($this->requiredParameters, array_keys($this->dot($this->parameters)));
+
+        $missingRequiredParametersBracketed = [];
+        if (!empty($missingRequiredParameters)) {
+            foreach ($missingRequiredParameters as $parameter) {
+                $segments = explode('.', $parameter);
+                $bracketedName = $segments[0];
+
+                for ($i = 1; $i < count($segments); $i++) {
+                    if (isset($segments[$i])) {
+                        $bracketedName .= "[{$segments[$i]}]";
+                    }
+                }
+                $missingRequiredParametersBracketed[] = $bracketedName;
+            }
+
+            throw new CanvasApiParameterException('Missing required parameter(s) \''
+                . implode(',', $missingRequiredParametersBracketed) . '\'');
+        }
     }
 
     /*
@@ -157,5 +179,26 @@ trait ExecutesCanvasApiCalls
     public function setPerPage(int $per_page)
     {
         return $this->addParameters(['per_page' => $per_page]);
+    }
+
+    /**
+     * Flatten a multi-dimensional associative array with dots. From Illuminate\Support\Arr
+     *
+     * @param  array   $array
+     * @param  string  $prepend
+     * @return array
+     */
+
+    protected function dot($array, $prepend = '')
+    {
+        $results = [];
+        foreach ($array as $key => $value) {
+            if (is_array($value) && ! empty($value)) {
+                $results = array_merge($results, $this->dot($value, $prepend.$key.'.'));
+            } else {
+                $results[$prepend.$key] = $value;
+            }
+        }
+        return $results;
     }
 }

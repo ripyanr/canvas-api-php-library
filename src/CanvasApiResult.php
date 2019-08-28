@@ -122,11 +122,6 @@ class CanvasApiResult
      */
     public function setCalls(array $calls)
     {
-        // check for single call from call() vs. array of calls from paginate()
-        if (isset($calls['request']) && isset($calls['response'])) {
-            $calls = [$calls];
-        }
-
         $this->calls = $calls;
         return $this;
     }
