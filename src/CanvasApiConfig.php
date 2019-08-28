@@ -2,7 +2,7 @@
 
 namespace Uncgits\CanvasApi;
 
-class CanvasApiConfig
+abstract class CanvasApiConfig
 {
     /*
     |--------------------------------------------------------------------------
