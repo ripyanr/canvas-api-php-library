@@ -16,7 +16,11 @@ It is intended for internal use - if you are external to UNCG please feel free t
 
 To install the package: `composer require uncgits/canvas-api-php-library`
 
+If you are using the built-in Guzzle driver, you will also need to make sure you have Guzzle 6.* in your project: `composer require guzzlehttp/guzzle:"6.*"`. This package does not list Guzzle as a dependency because it is not strictly required (adapters for other HTTP clients are in the plans, and you can always write your own).
+
 ## Use it!
+
+### Create a config object
 
 Create a class in your application that extends `Uncgits\CanvasApi\CanvasApiConfig`. Then, on `__construct()`, utilize `$this->setApiHost()` and `$this->setToken()` methods to set up your API credentials. Example:
 
@@ -36,22 +40,30 @@ class TestEnvironment extends CanvasApiConfig
     }
 }
 ```
+### Instantiate an API Client class
 
-Then, instantiate the client you want, based on the type of call(s) you want to make. All of the API clients (see below) are configured to accept a `CanvasApiConfig` object or class string in the constructor.
+Instantiate the client you want (found in `Uncgits\CanvasApi\Clients`), based on the type of call(s) you want to make. The client takes two arguments: first, a `CanvasApiConfig` object or class string, and second an object that implements `Uncgits\CanvasApi\Adapters\CanvasApiAdapter`
+
+> By default, the `Guzzle` adapter is available with this package (or you can write your own, more later).
 
 ```php
 // OPTION 1 - pass instance
 
-// get a new config object
-$config = new App\CanvasConfigs\TestEnvironment();
-// instantiate the client and pass in the config
-$accountsClient = new \Uncgits\CanvasApi\Clients\Accounts($config);
+// instantiate a config object
+$config = new App\CanvasConfigs\TestEnvironment;
+// instantiate an adapter
+$adapter = new \Uncgits\CanvasApi\Adapters\Guzzle;
+// pass both object instances to the Client class
+$accountsClient = new \Uncgits\CanvasApi\Clients\Accounts($config, $adapter);
 ```
 
 ```php
-// OPTION 2 - pass class name
-// instantiate the client and pass in the config class name
-$accountsClient = new \Uncgits\CanvasApi\Clients\Accounts(App\CanvasConfigs\TestEnvironment::class);
+// OPTION 2 - pass class names
+// instantiate the client and pass in the config class and adapter names
+$accountsClient = new \Uncgits\CanvasApi\Clients\Accounts(
+    App\CanvasConfigs\TestEnvironment::class,
+    Uncgits\CanvasApi\Adapters\Guzzle::class
+);
 ```
 
 Then, once you have the client, if you want to list all Accounts:
@@ -87,7 +99,7 @@ Refer to the API documentation for the accepted parameters, as well as the struc
 
 # Laravel wrapper
 
-This package has a dedicated [wrapper package for Laravel](https://bitbucket.org/uncg-its/canvas-api-wrapper-laravel/src), that includes container bindings, facades, config files, and other shims to help you use this package easily within a Laravel application.
+This package has a dedicated [wrapper package for Laravel](https://bitbucket.org/uncg-its/canvas-api-wrapper-laravel/src), that includes container bindings, facades, config files, adapters, and other shims to help you use this package easily within a Laravel application.
 
 # Detailed Usage
 
@@ -95,23 +107,28 @@ This package has a dedicated [wrapper package for Laravel](https://bitbucket.org
 
 ### General Architecture
 
-This library is comprised of many **Clients**, each of which interacts with one specific category / area of the Canvas API. For instance, there is a Quizzes client, an Accounts client, a Users client, and so on. Each client class is based fully on its architecture in the Canvas API Documentation. All client classes extend from the base abstract `Uncgits\CanvasApi\CanvasApiClient` class, which contains the general functionality of making an API call and parsing the result.
+This library is comprised of many **Clients**, each of which interacts with one specific category / area of the Canvas API. For instance, there is a Quizzes client, an Accounts client, a Users client, and so on. Each client class is based fully on its architecture in the Canvas API Documentation. All client classes extend from the base abstract `Uncgits\CanvasApi\CanvasApiClient` class, which helps to wire up the Client class with the Adapter and Config classes.
+
+**Adapter** classes are basically abstracted HTTP request handlers. They worry about structuring and making API calls to Canvas, handling pagination as necessary, and formatting the response in a simple, structured way (using a `CanvasApiResult` object). These Adapter classes implement the `CanvasApiAdapter` interface. At the time of initial release, only an adapter for [Guzzle](http://docs.guzzlephp.org/en/stable/) is included - however, more will be added later, and you can always write your own to use your PHP HTTP library of choice. (Or straight cURL. Nobody's judging.)
+
+**Config** classes are classes that configure basic things that the adapter needs to know about in order to interact with the Canvas API. No concrete classes are included in this package - only the abstract `CanvasApiConfig` class. The purpose for this architecture is so that you can create several classes to support different Canvas environments - even if you only interact with one Canvas domain, that domain has a `test` and a `beta` instance.
 
 ### Naming
 
-Each client's methods are named as closely as possible to the names given to the operations in the API documentation. For example, the Accounts client contains `listAccounts()`, `listAccountsForCourseAdmins()`, and so on - all in line with the official documentation. The notable modification to this rule: 'a' / 'an' / 'the' are always dropped, so we have `getSingleAccount()`, `getTermsOfService()`, and so forth.
+Each client's methods are named as closely as possible to the names given to their corresponding operations in the API documentation. For example, the Accounts client contains `listAccounts()`, `listAccountsForCourseAdmins()`, and so on - all in line with the official documentation. The notable modification to this rule: 'a' / 'an' / 'the' are always dropped, so we have `getSingleAccount()`, `getTermsOfService()`, and so forth.
 
 ### Aliasing
 
-Where prudent, aliasing has been employed where the Canvas API does not always adhere to logical, RESTful semantic syntax. For instance, while `getSingleAccount()` (as named via the Canvas API documentation) is descriptive, the 'single' modifier is not in line with traditional RESTful operations and could be considered superfluous; many developers would think of this as `getAccount()` instead. So, in these cases, while the original core method will always adhere to its name in the official documentation, there are many places where aliases (like this example) have been added for convenience. These aliases always call the "original" method.
+Where prudent, aliasing has been employed where the Canvas API does not always adhere to logical, RESTful semantic syntax. For instance, while `getSingleAccount()` (as named via the Canvas API documentation) is descriptive, the 'single' modifier is not in line with how traditional RESTful transactions are named, and thus could be considered superfluous; in other words, many developers would guess this to be `getAccount()` instead. So, in these cases, while the original core method will always adhere to its name in the official documentation, there are many places where aliases (like this example) have been added for convenience. These aliases simply call the "real" method and return its results.
 
 ## Acting as a user
 
 If you are using this library with a token that includes the permission to "Act As" (formerly "Masquerade" as) another user, you can utilize the chainable `asUser()` method when making a call:
 
 ```php
-$config = new \App\CanvasConfigs\TestEnvironment();
-$userClient = new \Uncgits\CanvasApi\Clients\Users($config);
+$config = new \App\CanvasConfigs\TestEnvironment;
+$adapter = new \Uncgits\CanvasApi\Adapters\Guzzle;
+$userClient = new \Uncgits\CanvasApi\Clients\Users($config, $adapter);
 
 $result = $userClient->asUser(12345)->listCourseNicknames();
 ```
@@ -124,7 +141,7 @@ Parameters passed as arguments to all methods are interpolated directly into the
 
 ## Pagination
 
-Pagination is handled automatically, where and when necessary. Upon each API call the return headers are read, and the Link header is parsed and extracted, [in accordance with the documentation](https://canvas.instructure.com/doc/api/file.pagination.html).
+Pagination is handled automatically, where and when necessary, at the adapter level. Upon each API call the return headers are read, and the Link header is parsed and extracted, [in accordance with the documentation](https://canvas.instructure.com/doc/api/file.pagination.html).
 
 To customize pagination on any API call, you may utilize `addParameters()` to set the `per_page` value to whatever you choose, or make use of the built-in helper `setPerPage()` method:
 
@@ -134,11 +151,11 @@ $result = $accountsClient->addParameters(['per_page' => 100])->listAccounts();
 $result = $accountsClient->setPerPage(100)->listAccounts();
 ```
 
-Since the pagination headers are checked on every API call, each client operation may therefore initiate several API calls before it reaches completion. See below for details on how results are presented.
+Since the pagination headers are checked on every API call, each client transaction may therefore initiate several API calls before it reaches completion. See below for details on how results are presented.
 
 ## Handling Results
 
-Every time a client operation is requested, this library will encapsulate important information and present it in the `Uncgits\CanvasApi\CanvasApiResult` class. Within that class, you are able to access structured information on each API call made during that operation, as well as an aggregated resultset that should be iterable as an array. For example, if you ask for all Accounts, and it requires 5 API calls of page size 10 to retrieve them, your result contents would be a single array of all accounts; this is designed to save you time in parsing them yourself!
+Every time a client transaction is requested, this library will encapsulate important information and present it in the `Uncgits\CanvasApi\CanvasApiResult` class. Within that class, you are able to access structured information on each API call made during that transaction, as well as an aggregated resultset that should be iterable as an array. For example, if you ask for all Accounts, and it requires 5 API calls of page size 10 to retrieve them, your result contents would be a single array of all accounts; this is designed to save you time in parsing them yourself!
 
 ```php
 $result = $accountsClient->listAccounts();
@@ -203,11 +220,37 @@ If you need to use an HTTP proxy, set that up in your `CanvasApiConfig` object u
 
 If you need to set additional headers on your requests, you can utilize the `setAdditionalHeaders()` method on the client class, which accepts an array of key-value pairs.
 
+# Writing your own adapters
+
+An adapter is responsible for everything involved in the actual interaction with the Canvas API. The Adapter's responsibilities include:
+
+- assembling the call endpoint, headers, parameters, body, and other options
+- making the proper HTTP request
+- parsing the response
+- reading pagination headers and determining whether another call is necessary to fulfill the requested transaction
+- reporting errors
+- collating results into a single array
+- recording all calls made in an transaction.
+
+The `CanvasApiAdapter` interface shows how an adapter should be implemented. Most of the basic methods in that interface (setters, getters, convenience aliases, etc.) are implemented for you in the `ExecutesApiCalls` trait, so generally speaking you should use that trait as a good first step. (Of course you can always override methods on the Trait if you prefer.)
+
+On each adapter, therefore, that leaves you to implement the following methods on your own:
+
+- `call()`
+- `transaction()`
+- `parsePagination()`
+- `normalizeResult()`
+
+
 # Questions? Concerns?
 
 Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo (if able).
 
 # Version History
+
+## 0.2
+
+- Rewrite for new Adapter format
 
 ## 0.1
 
