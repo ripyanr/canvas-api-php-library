@@ -22,8 +22,10 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.0.0",
-        "nesbot/carbon": ">=1.22.0",
-        "guzzlehttp/guzzle": "6.*"
+        "nesbot/carbon": ">=1.22.0"
+    },
+    "suggest": {
+        "guzzlehttp/guzzle": "6.* recommended to make HTTP request with Guzzle adapter"
     },
     "autoload": {
         "psr-0": {

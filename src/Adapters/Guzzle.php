@@ -12,7 +12,7 @@ class Guzzle implements CanvasApiAdapter
 
     /*
     |--------------------------------------------------------------------------
-    | API Call methods
+    | Implementing CanvasApiAdapter
     |--------------------------------------------------------------------------
     */
 
@@ -79,12 +79,6 @@ class Guzzle implements CanvasApiAdapter
         return $calls;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Helper methods
-    |--------------------------------------------------------------------------
-    */
-
     /**
      * Normalizes and formats API call information into an array for convenience
      *
@@ -117,33 +111,10 @@ class Guzzle implements CanvasApiAdapter
         ];
     }
 
-    /**
-     * Flatten a multi-dimensional associative array with dots. From Illuminate\Support\Arr
-     *
-     * @param  array   $array
-     * @param  string  $prepend
-     * @return array
-     */
-
-    protected function dot($array, $prepend = '')
-    {
-        $results = [];
-        foreach ($array as $key => $value) {
-            if (is_array($value) && ! empty($value)) {
-                $results = array_merge($results, $this->dot($value, $prepend.$key.'.'));
-            } else {
-                $results[$prepend.$key] = $value;
-            }
-        }
-        return $results;
-    }
-
     public function validateParameters()
     {
         // flatten out params array to dot notation for easy checking
-        $parametersDotted = $this->dot($this->parameters);
-
-        $missingRequiredParameters = array_diff($this->requiredParameters, array_keys($parametersDotted));
+        $missingRequiredParameters = array_diff($this->requiredParameters, array_keys($this->dot($this->parameters)));
 
         $missingRequiredParametersBracketed = [];
         if (!empty($missingRequiredParameters)) {
@@ -159,7 +130,8 @@ class Guzzle implements CanvasApiAdapter
                 $missingRequiredParametersBracketed[] = $bracketedName;
             }
 
-            throw new CanvasApiParameterException('Missing required parameter(s) \'' . implode(',', $missingRequiredParametersBracketed) . '\'');
+            throw new CanvasApiParameterException('Missing required parameter(s) \''
+                . implode(',', $missingRequiredParametersBracketed) . '\'');
         }
     }
 
@@ -199,5 +171,32 @@ class Guzzle implements CanvasApiAdapter
         }
 
         return $paginationHeaders;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helper methods
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Flatten a multi-dimensional associative array with dots. From Illuminate\Support\Arr
+     *
+     * @param  array   $array
+     * @param  string  $prepend
+     * @return array
+     */
+
+    protected function dot($array, $prepend = '')
+    {
+        $results = [];
+        foreach ($array as $key => $value) {
+            if (is_array($value) && ! empty($value)) {
+                $results = array_merge($results, $this->dot($value, $prepend.$key.'.'));
+            } else {
+                $results[$prepend.$key] = $value;
+            }
+        }
+        return $results;
     }
 }
