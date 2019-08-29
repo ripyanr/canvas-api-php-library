@@ -9,20 +9,15 @@ use Uncgits\CanvasApi\Exceptions\CanvasApiAdapterException;
 class CanvasApi
 {
     protected $client;
+    protected $adapter;
+    protected $config;
 
     public function __construct(array $setup = [])
     {
-        if (isset($setup['client'])) {
-            $this->setClient($setup['client']);
-        }
-
-        if (isset($setup['adapter'])) {
-            $this->setAdapter($setup['adapter']);
-        }
-
-        if (isset($setup['config'])) {
-            $this->setConfig($setup['config']);
-        }
+        $this->client = $setup['client'] ?? null;
+        $this->adapter = $setup['adapter'] ?? null;
+        $this->config = $setup['config'] ?? null;
+        $this->setup();
     }
 
     public function setClient($client)
@@ -64,8 +59,37 @@ class CanvasApi
         return $this;
     }
 
+    public function setup()
+    {
+        if (!is_null($this->client)) {
+            $this->setClient($this->client);
+
+            if (!is_null($this->adapter)) {
+                $this->setAdapter($this->adapter);
+
+                if (!is_null($this->config)) {
+                    $this->setConfig($this->config);
+                }
+            }
+        }
+
+        return $this;
+    }
+
     public function using($client)
     {
+        // assume default client location in package unless we were given something that looks namespaced
+        if (strpos($client, '\\') === false) {
+            $client = '\\Uncgits\\CanvasApi\\Clients\\' . str_replace(' ', '', ucwords($client));
+        }
+
+        if (!class_exists($client)) {
+            throw new \Exception('Class ' . $client . ' not found');
+        }
+
+        $this->client = new $client;
+
+        return $this->setup();
     }
 
     public function __call($method, $arguments)

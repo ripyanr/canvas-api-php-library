@@ -81,30 +81,6 @@ interface CanvasApiAdapterInterface
      */
     public function getParameter($key);
 
-    /**
-     * Act as another user in Canvas for the duration of the operation
-     *
-     * @param mixed $user_id
-     * @return self
-     */
-    public function asUserId($user_id);
-
-    /**
-     * Alias for asUserId()
-     *
-     * @param mixed $user_id
-     * @return self
-     */
-    public function asUser($user_id);
-
-    /**
-     * Shortcut method for setting the 'per_page' parameter
-     *
-     * @param int $per_page
-     * @return self
-     */
-    public function setPerPage(int $per_page);
-
     /*
     |--------------------------------------------------------------------------
     | API Call methods
