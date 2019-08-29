@@ -49,7 +49,7 @@ class Guzzle implements CanvasApiAdapterInterface
         // disable Guzzle exceptions. this class is responsible for providing an account of what happened, so we need
         // to get the response back no matter what.
         $requestOptions['http_errors'] = false;
-
+        dump('final: ' . $endpoint, $requestOptions);
         // perform the call
         $response = $client->$method($endpoint, $requestOptions);
 
@@ -59,15 +59,24 @@ class Guzzle implements CanvasApiAdapterInterface
 
     public function transaction($endpoint, $method, $calls = [])
     {
+        if (count($calls) > 10) {
+            dump('limit exceeded');
+            return $calls;
+        }
+
         // set up
         $this->validateParameters();
 
         // make the call(s)
+        dump($endpoint, $this->parameters);
         $calls[] = $result = $this->call($endpoint, $method);
         if (!is_null($result['response']['pagination'])) {
+            dump($result['response']['pagination']);
             if (isset($result['response']['pagination']['next']) || $result['response']['pagination']['current'] != $result['response']['pagination']['last']) {
-                $nextEndpoint = str_replace($this->config->getPrefix(), '', $result['response']['pagination']['next']);
-                return $this->transaction($nextEndpoint, $method, $calls);
+                $parsed = parse_url($result['response']['pagination']['next']);
+                parse_str($parsed['query'], $query);
+                $this->addParameters($query);
+                return $this->transaction($endpoint, $method, $calls);
             }
         }
 

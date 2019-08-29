@@ -64,7 +64,7 @@ class Accounts implements CanvasApiClientInterface
         return new CanvasApiResult($this->get('accounts/' . $account_id . '/help_links'));
     }
 
-    public function getActiveCourses($account_id)
+    public function listActiveCoursesInAccount($account_id)
     {
         return new CanvasApiResult($this->get('accounts/' . $account_id . '/courses'));
     }

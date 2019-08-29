@@ -314,6 +314,7 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 ## 0.3
 
 - Rewrite for new Client format
+- Rework pagination bug in Guzzle adapter where pagination failed if other query parameters were present
 
 ## 0.2
 
