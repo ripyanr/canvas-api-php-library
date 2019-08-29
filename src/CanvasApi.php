@@ -64,6 +64,10 @@ class CanvasApi
         return $this;
     }
 
+    public function using($client)
+    {
+    }
+
     public function __call($method, $arguments)
     {
         // delegate to client
