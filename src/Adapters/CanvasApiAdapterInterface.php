@@ -4,7 +4,7 @@ namespace Uncgits\CanvasApi\Adapters;
 
 use Uncgits\CanvasApi\Exceptions\CanvasApiParameterException;
 
-interface CanvasApiAdapter
+interface CanvasApiAdapterInterface
 {
     /*
     |--------------------------------------------------------------------------

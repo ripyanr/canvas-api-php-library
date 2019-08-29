@@ -2,14 +2,16 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiClient;
 use Uncgits\CanvasApi\CanvasApiResult;
+use Uncgits\CanvasApi\Traits\HasApiAdapter;
 
 /**
  * https://canvas.instructure.com/doc/api/reports.html
  */
-class AccountReports extends CanvasApiClient implements CanvasApiClientInterface
+class AccountReports implements CanvasApiClientInterface
 {
+    use HasApiAdapter;
+
     public function listAvailableReports($account_id)
     {
         return new CanvasApiResult($this->get('accounts/' . $account_id . '/reports'));

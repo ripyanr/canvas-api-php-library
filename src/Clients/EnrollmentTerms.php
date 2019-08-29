@@ -4,12 +4,16 @@ namespace Uncgits\CanvasApi\Clients;
 
 use Uncgits\CanvasApi\CanvasApiClient;
 use Uncgits\CanvasApi\CanvasApiResult;
+use Uncgits\CanvasApi\Traits\HasApiAdapter;
+use Uncgits\CanvasApi\Clients\CanvasApiClientInterface;
 
 /**
  * https://canvas.instructure.com/doc/api/enrollment_terms.html
  */
-class EnrollmentTerms extends CanvasApiClient
+class EnrollmentTerms implements CanvasApiClientInterface
 {
+    use HasApiAdapter;
+
     public function createEnrollmentTerm($account_id)
     {
         return new CanvasApiResult($this->post('accounts/' . $account_id . '/terms'));

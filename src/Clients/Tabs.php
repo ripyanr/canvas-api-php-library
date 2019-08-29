@@ -2,14 +2,16 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiClient;
 use Uncgits\CanvasApi\CanvasApiResult;
+use Uncgits\CanvasApi\Traits\HasApiAdapter;
 
 /**
  * https://canvas.instructure.com/doc/api/tabs.html
  */
-class Tabs extends CanvasApiClient
+class Tabs implements CanvasApiClientInterface
 {
+    use HasApiAdapter;
+
     public function listTabsForAccount($account_id)
     {
         return new CanvasApiResult($this->get('accounts/' . $account_id . '/tabs'));

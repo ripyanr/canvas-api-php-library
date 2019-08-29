@@ -9,7 +9,7 @@ trait ExecutesCanvasApiCalls
 {
     /*
     |--------------------------------------------------------------------------
-    | Implementation of CanvasApiAdapter interface
+    | Implementation of CanvasApiAdapterInterface
     |--------------------------------------------------------------------------
     */
 

@@ -11,7 +11,7 @@ class Guzzle implements CanvasApiAdapterInterface
 
     /*
     |--------------------------------------------------------------------------
-    | Implementing CanvasApiAdapter
+    | Implementing CanvasApiAdapterInterface
     |--------------------------------------------------------------------------
     */
 
