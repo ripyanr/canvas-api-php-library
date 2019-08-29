@@ -8,7 +8,7 @@ use Uncgits\CanvasApi\CanvasApiResult;
 /**
  * https://canvas.instructure.com/doc/api/reports.html
  */
-class AccountReports extends CanvasApiClient
+class AccountReports extends CanvasApiClient implements CanvasApiClientInterface
 {
     public function listAvailableReports($account_id)
     {

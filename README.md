@@ -42,7 +42,7 @@ class TestEnvironment extends CanvasApiConfig
 ```
 ### Instantiate an API Client class
 
-Instantiate the client you want (found in `Uncgits\CanvasApi\Clients`), based on the type of call(s) you want to make. The client takes two arguments: first, a `CanvasApiConfig` object or class string, and second an object that implements `Uncgits\CanvasApi\Adapters\CanvasApiAdapter`
+Instantiate the client you want (found in `Uncgits\CanvasApi\Clients`), based on the type of call(s) you want to make. The client takes two arguments: first, a `CanvasApiConfig` object or class string, and second an object that implements `Uncgits\CanvasApi\Adapters\CanvasApiAdapterInterface`
 
 > By default, the `Guzzle` adapter is available with this package (or you can write your own, more later).
 
@@ -109,7 +109,7 @@ This package has a dedicated [wrapper package for Laravel](https://bitbucket.org
 
 This library is comprised of many **Clients**, each of which interacts with one specific category / area of the Canvas API. For instance, there is a Quizzes client, an Accounts client, a Users client, and so on. Each client class is based fully on its architecture in the Canvas API Documentation. All client classes extend from the base abstract `Uncgits\CanvasApi\CanvasApiClient` class, which helps to wire up the Client class with the Adapter and Config classes.
 
-**Adapter** classes are basically abstracted HTTP request handlers. They worry about structuring and making API calls to Canvas, handling pagination as necessary, and formatting the response in a simple, structured way (using a `CanvasApiResult` object). These Adapter classes implement the `CanvasApiAdapter` interface. At the time of initial release, only an adapter for [Guzzle](http://docs.guzzlephp.org/en/stable/) is included - however, more will be added later, and you can always write your own to use your PHP HTTP library of choice. (Or straight cURL. Nobody's judging.)
+**Adapter** classes are basically abstracted HTTP request handlers. They worry about structuring and making API calls to Canvas, handling pagination as necessary, and formatting the response in a simple, structured way (using a `CanvasApiResult` object). These Adapter classes implement the `CanvasApiAdapterInterface` interface. At the time of initial release, only an adapter for [Guzzle](http://docs.guzzlephp.org/en/stable/) is included - however, more will be added later, and you can always write your own to use your PHP HTTP library of choice. (Or straight cURL. Nobody's judging.)
 
 **Config** classes are classes that configure basic things that the adapter needs to know about in order to interact with the Canvas API. No concrete classes are included in this package - only the abstract `CanvasApiConfig` class. The purpose for this architecture is so that you can create several classes to support different Canvas environments - even if you only interact with one Canvas domain, that domain has a `test` and a `beta` instance.
 
@@ -232,7 +232,7 @@ An adapter is responsible for everything involved in the actual interaction with
 - collating results into a single array
 - recording all calls made in an transaction.
 
-The `CanvasApiAdapter` interface shows how an adapter should be implemented. Most of the basic methods in that interface (setters, getters, convenience aliases, etc.) are implemented for you in the `ExecutesApiCalls` trait, so generally speaking you should use that trait as a good first step. (Of course you can always override methods on the Trait if you prefer.)
+The `CanvasApiAdapterInterface` interface shows how an adapter should be implemented. Most of the basic methods in that interface (setters, getters, convenience aliases, etc.) are implemented for you in the `ExecutesApiCalls` trait, so generally speaking you should use that trait as a good first step. (Of course you can always override methods on the Trait if you prefer.)
 
 On each adapter, therefore, that leaves you to implement the following methods on your own:
 

@@ -5,7 +5,7 @@ namespace Uncgits\CanvasApi\Adapters;
 use GuzzleHttp\Client;
 use Uncgits\CanvasApi\Traits\ExecutesCanvasApiCalls;
 
-class Guzzle implements CanvasApiAdapter
+class Guzzle implements CanvasApiAdapterInterface
 {
     use ExecutesCanvasApiCalls;
 
