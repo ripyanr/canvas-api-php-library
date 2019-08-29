@@ -44,4 +44,44 @@ interface CanvasApiClientInterface
      * @return self
      */
     public function setPerPage(int $per_page);
+
+    /**
+     * Delegate a GET request to the adapter and return the result
+     *
+     * @param mixed $endpoint
+     * @return array
+     */
+    public function get($endpoint);
+
+    /**
+     * Delegate a POST request to the adapter and return the result
+     *
+     * @param mixed $endpoint
+     * @return array
+     */
+    public function post($endpoint);
+
+    /**
+     * Delegate a PATCH request to the adapter and return the result
+     *
+     * @param mixed $endpoint
+     * @return array
+     */
+    public function patch($endpoint);
+
+    /**
+     * Delegate a PUT request to the adapter and return the result
+     *
+     * @param mixed $endpoint
+     * @return array
+     */
+    public function put($endpoint);
+
+    /**
+     * Delegate a DELETE request to the adapter and return the result
+     *
+     * @param mixed $endpoint
+     * @return array
+     */
+    public function delete($endpoint);
 }

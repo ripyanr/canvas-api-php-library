@@ -76,9 +76,78 @@ trait HasApiAdapter
         return $this->addParameters(['per_page' => $per_page]);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Delegation
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Delegate a GET request to the adapter and return the adapter
+     *
+     * @param mixed $endpoint
+     * @return array
+     */
+    public function get($endpoint)
+    {
+        return $this->adapter->get($endpoint);
+    }
+
+    /**
+     * Delegate a POST request to the adapter and return the adapter
+     *
+     * @param mixed $endpoint
+     * @return array
+     */
+    public function post($endpoint)
+    {
+        return $this->adapter->post($endpoint);
+    }
+
+    /**
+     * Delegate a PATCH request to the adapter and return the adapter
+     *
+     * @param mixed $endpoint
+     * @return array
+     */
+    public function patch($endpoint)
+    {
+        return $this->adapter->patch($endpoint);
+    }
+
+    /**
+     * Delegate a PUT request to the adapter and return the adapter
+     *
+     * @param mixed $endpoint
+     * @return array
+     */
+    public function put($endpoint)
+    {
+        return $this->adapter->put($endpoint);
+    }
+
+    /**
+     * Delegate a DELETE request to the adapter and return the adapter
+     *
+     * @param mixed $endpoint
+     * @return array
+     */
+    public function delete($endpoint)
+    {
+        return $this->adapter->delete($endpoint);
+    }
+
+    /**
+     * Delegate through to adapter but return this class instead of adapter
+     *
+     * @param mixed $method
+     * @param mixed $arguments
+     * @return self
+     */
     public function __call($method, $arguments)
     {
         // delegate to adapter
-        return $this->adapter->$method(...$arguments);
+        $this->adapter->$method(...$arguments);
+        return $this;
     }
 }

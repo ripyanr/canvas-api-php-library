@@ -54,6 +54,12 @@ class Courses implements CanvasApiClientInterface
         return new CanvasApiResult($this->get('courses/' . $course_id . '/users/' . $id));
     }
 
+    // alias
+    public function getUser($course_id, $id)
+    {
+        return $this->getSingleUser($course_id, $id);
+    }
+
     public function previewProcessedHtml($course_id)
     {
         return new CanvasApiResult($this->post('courses/' . $course_id . '/preview_html'));
