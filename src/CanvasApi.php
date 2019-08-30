@@ -107,29 +107,16 @@ class CanvasApi
         }
 
         $this->tempClient = null; // reset
-        return $this->execute($activeClient, $method, $arguments);
-    }
 
-    public function execute(CanvasApiClientInterface $client, $method, $arguments)
-    {
-        $endpointParameters = $client->$method(...$arguments);
+        $endpointParameters = $activeClient->$method(...$arguments);
         $endpoint = (new CanvasApiEndpoint(...$endpointParameters))
         ->setFinalEndpoint($this->config);
 
-        $this->beforeExecution($endpoint);
-        $result = new CanvasApiResult($this->adapter->usingConfig($this->config)->transaction($endpoint));
-        $this->afterExecution($result);
-
-        return $result;
+        return $this->execute($activeClient, $endpoint, $method, $arguments);
     }
 
-    public function beforeExecution(CanvasApiEndpoint $endpoint)
+    public function execute(CanvasApiClientInterface $client, CanvasApiEndpoint $endpoint, $method, $arguments)
     {
-        //
-    }
-
-    public function afterExecution(CanvasApiResult $endpoint)
-    {
-        //
+        return new CanvasApiResult($this->adapter->usingConfig($this->config)->transaction($endpoint));
     }
 }

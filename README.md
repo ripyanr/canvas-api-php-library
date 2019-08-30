@@ -345,7 +345,7 @@ Theoretically this API library will be complete at some point, and so writing cu
 
 # Extending the API class
 
-If you need additional functionality like logging or caching, you can write your own `CanvasApi` wrapper class that extends this `CanvasApi` class. The most common use cases would be to set some default values for the Config and Adapter classes, perhaps in the constructor, or to utilize the `beforeExecution()` and `afterExecution()` methods to perform additional operations before the transaction is kicked off or after it is finished.
+If you need additional functionality like logging or caching, you can write your own `CanvasApi` wrapper class that extends this `CanvasApi` class. The most common use cases would be to set some default values for the Config and Adapter classes, perhaps in the constructor, or to override the `execute()` method to perform additional operations before the transaction is kicked off or after it is finished.
 
 # Questions? Concerns?
 
