@@ -80,6 +80,11 @@ trait ExecutesCanvasApiCalls
         return $this->parameters;
     }
 
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
     public function addParameters(array $parameters)
     {
         $this->parameters = array_merge($this->parameters, $parameters);

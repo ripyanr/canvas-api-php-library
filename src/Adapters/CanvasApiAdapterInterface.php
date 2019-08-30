@@ -60,6 +60,13 @@ interface CanvasApiAdapterInterface
      */
     public function getParameters();
 
+    /**
+     * Get current config
+     *
+     * @return  CanvasApiConfig
+     */
+    public function getConfig();
+
     /*
     |--------------------------------------------------------------------------
     | User-callable methods
