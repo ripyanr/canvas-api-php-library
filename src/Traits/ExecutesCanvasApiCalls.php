@@ -16,7 +16,7 @@ trait ExecutesCanvasApiCalls
     /**
      * The CanvasApiConfig object used to make API calls.
      *
-     * @var undefined
+     * @var CanvasApiConfig
      */
     protected $config;
 
@@ -43,19 +43,6 @@ trait ExecutesCanvasApiCalls
      */
     protected $requiredParameters = [];
 
-    public function setConfig($config)
-    {
-        if (is_string($config) && class_exists($config)) {
-            $config = new $config;
-        }
-
-        if (is_a($config, CanvasApiConfig::class)) {
-            $this->config = $config;
-            return;
-        }
-
-        throw new CanvasApiConfigException('Client class must receive CanvasApiConfig object or class name in constructor');
-    }
 
     public function setAdditionalHeaders(array $additionalHeaders)
     {

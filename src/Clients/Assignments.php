@@ -3,14 +3,12 @@
 namespace Uncgits\CanvasApi\Clients;
 
 use Uncgits\CanvasApi\CanvasApiResult;
-use Uncgits\CanvasApi\Traits\HasApiAdapter;
 
 /**
  * https://canvas.instructure.com/doc/api/assignments.html
  */
 class Assignments implements CanvasApiClientInterface
 {
-    use HasApiAdapter;
     /*
     |--------------------------------------------------------------------------
     | Methods

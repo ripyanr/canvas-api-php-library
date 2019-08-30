@@ -3,15 +3,12 @@
 namespace Uncgits\CanvasApi\Clients;
 
 use Uncgits\CanvasApi\CanvasApiResult;
-use Uncgits\CanvasApi\Traits\HasApiAdapter;
 
 /**
  * https://canvas.instructure.com/doc/api/roles.html
  */
 class Roles implements CanvasApiClientInterface
 {
-    use HasApiAdapter;
-
     public function listRoles($account_id)
     {
         return new CanvasApiResult($this->get('accounts/' . $account_id . '/roles'));

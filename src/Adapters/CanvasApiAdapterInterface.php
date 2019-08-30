@@ -14,16 +14,6 @@ interface CanvasApiAdapterInterface
     */
 
     /**
-     * Sets the $config property either directly from a CanvasApiConfig instance, or on-the-fly with the class name of
-     *   the config to be used
-     *
-     * @param CanvasApiConfig|string $config
-     * @throws CanvasApiConfigException
-     * @return void
-     */
-    public function setConfig($config);
-
-    /**
      * Set $additionalHeaders
      *
      * @param  array  $additionalHeaders  Additional headers to send with the call. Bearer token will always be sent.
@@ -108,12 +98,11 @@ interface CanvasApiAdapterInterface
      * Performs an API transaction (one or more calls). Responsible for setup, pagination, and teardown. Returns an
      *   array of normalized calls.
      *
-     * @param mixed $endpoint
-     * @param mixed $method
+     * @param CanvasApiEndpoint $endpoint
      * @param mixed $calls
      * @return array
      */
-    public function transaction($endpoint, $method, $calls = []);
+    public function transaction($endpoint, $calls = []);
 
     /**
      * Fluent alias for calling transaction() for a GET operation
