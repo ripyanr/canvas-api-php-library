@@ -187,9 +187,9 @@ class Users implements CanvasApiClientInterface
             ];
         }
         return [
-                'users/' . $id . '/merge_into/' . $destination_user_id,
-                'put'
-            ];
+            'users/' . $id . '/merge_into/' . $destination_user_id,
+            'put'
+        ];
     }
 
     public function splitMergedUsersIntoSeparateUsers($id)
@@ -304,7 +304,7 @@ class Users implements CanvasApiClientInterface
     |--------------------------------------------------------------------------
     */
 
-    private function applyScope(string $scope)
+    private function applyScope($scope)
     {
         $scopeString = '';
         if (!is_null($scope)) {

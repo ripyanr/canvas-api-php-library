@@ -64,10 +64,10 @@ class Guzzle implements CanvasApiAdapterInterface
         return $this;
     }
 
-    public function transaction($endpoint, $calls = [])
+    public function transaction(CanvasApiEndpoint $endpoint, $calls = [])
     {
         // set up
-        // $this->validateParameters($endpoint);
+        $this->validateParameters($endpoint);
 
         // make the call(s)
         $calls[] = $result = $this->call($endpoint->getEndpoint(), $endpoint->getMethod());

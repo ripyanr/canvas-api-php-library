@@ -2,7 +2,7 @@
 
 namespace Uncgits\CanvasApi\Adapters;
 
-use Uncgits\CanvasApi\Exceptions\CanvasApiConfigException;
+use Uncgits\CanvasApi\CanvasApiEndpoint;
 use Uncgits\CanvasApi\Exceptions\CanvasApiParameterException;
 
 interface CanvasApiAdapterInterface
@@ -102,7 +102,7 @@ interface CanvasApiAdapterInterface
      * @param mixed $calls
      * @return array
      */
-    public function transaction($endpoint, $calls = []);
+    public function transaction(CanvasApiEndpoint $endpoint, $calls = []);
 
     /**
      * Fluent alias for calling transaction() for a GET operation
@@ -158,18 +158,11 @@ interface CanvasApiAdapterInterface
     /**
      * Validates the parameters for the call, ensuring all required parameters are set in $parameters property
      *
+     * @param CanvasApiEndpoint $endpoint
      * @throws CanvasApiParameterException
      * @return void
      */
-    public function validateParameters();
-
-    /**
-     * Verifies that a valid Config has been set on the adapter
-     *
-     * @throws CanvasApiConfigException
-     * @return void
-     */
-    public function checkConfig();
+    public function validateParameters(CanvasApiEndpoint $endpoint);
 
     /**
      * Parses pagination headers to create a semantic array of URLS for "rel" values current, next, first, last

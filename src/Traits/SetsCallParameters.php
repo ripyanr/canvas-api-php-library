@@ -13,8 +13,7 @@ trait SetsCallParameters
      */
     public function asUserId($user_id)
     {
-        $this->adapter->addParameters(['as_user_id' => $user_id]);
-        return;
+        return $this->addParameters(['as_user_id' => $user_id]);
     }
 
     /**
@@ -25,8 +24,7 @@ trait SetsCallParameters
      */
     public function asUser($user_id)
     {
-        $this->asUserId($user_id);
-        return $this;
+        return $this->asUserId($user_id);
     }
 
     /**
@@ -37,7 +35,23 @@ trait SetsCallParameters
      */
     public function setPerPage(int $per_page)
     {
-        $this->adapter->addParameters(['per_page' => $per_page]);
-        return;
+        return $this->addParameters(['per_page' => $per_page]);
+    }
+
+    public function addParameters(array $parameters)
+    {
+        $this->adapter->addParameters($parameters);
+        return $this;
+    }
+
+    public function setParameters(array $parameters)
+    {
+        $this->adapter->setParameters([]);
+        return $this;
+    }
+
+    public function getParameters()
+    {
+        return $this->adapter->getParameters();
     }
 }

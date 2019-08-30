@@ -3,7 +3,8 @@
 namespace Uncgits\CanvasApi\Traits;
 
 use Uncgits\CanvasApi\CanvasApiConfig;
-use Uncgits\CanvasApi\Exceptions\CanvasApiConfigException;
+use Uncgits\CanvasApi\CanvasApiEndpoint;
+use Uncgits\CanvasApi\Exceptions\CanvasApiParameterException;
 
 trait ExecutesCanvasApiCalls
 {
@@ -113,10 +114,10 @@ trait ExecutesCanvasApiCalls
         return $this->transaction($endpoint, 'delete');
     }
 
-    public function validateParameters()
+    public function validateParameters(CanvasApiEndpoint $endpoint)
     {
         // flatten out params array to dot notation for easy checking
-        $missingRequiredParameters = array_diff($this->requiredParameters, array_keys($this->dot($this->parameters)));
+        $missingRequiredParameters = array_diff($endpoint->getRequiredParameters(), array_keys($this->dot($this->parameters)));
 
         $missingRequiredParametersBracketed = [];
         if (!empty($missingRequiredParameters)) {
@@ -134,13 +135,6 @@ trait ExecutesCanvasApiCalls
 
             throw new CanvasApiParameterException('Missing required parameter(s) \''
                 . implode(',', $missingRequiredParametersBracketed) . '\'');
-        }
-    }
-
-    public function checkConfig()
-    {
-        if (is_null($this->config)) {
-            throw new CanvasApiConfigException('Config is not set on Adapter class');
         }
     }
 
