@@ -197,11 +197,13 @@ This package has a dedicated [wrapper package for Laravel](https://bitbucket.org
 
 ### General Architecture
 
-This library is comprised of many **Clients**, each of which interacts with one specific category / area of the Canvas API. For instance, there is a Quizzes client, an Accounts client, a Users client, and so on. Each client class is based fully on its architecture in the Canvas API Documentation. All client classes implement the `Uncgits\CanvasApi\Clients\CanvasApiClientInterface` interface, which helps to wire up the Client class with the Adapter class.
+This library is comprised of many **Clients**, each of which interacts with one specific category / area of the Canvas API. For instance, there is a Quizzes client, an Accounts client, a Users client, and so on. Each client class is based fully on its architecture in the Canvas API Documentation. All client classes implement the `Uncgits\CanvasApi\Clients\CanvasApiClientInterface` interface, which is currently an empty interface but helps to identify each Client as a "valid" Client (so you can build your own). The job of a Client is to return an array that can be parsed into a `CanvasApiEndpoint` object, which requires an endpoint string, HTTP method string, and optional array of required parameters for the call to that Canvas API method.
 
 **Adapter** classes are basically abstracted HTTP request handlers. They worry about structuring and making API calls to Canvas, handling pagination as necessary, and formatting the response in a simple, structured way (using a `CanvasApiResult` object). These Adapter classes implement the `Uncgits\CanvasApi\Adapters\CanvasApiAdapterInterface` interface. At the time of initial release, only an adapter for [Guzzle](http://docs.guzzlephp.org/en/stable/) is included - however, more will be added later, and you can always write your own to use your PHP HTTP library of choice. (Or straight cURL. Nobody's judging.) Adapters technically exist as properties on the Client class.
 
-**Config** classes are classes that configure basic things that the adapter needs to know about in order to interact with the Canvas API. No concrete classes are included in this package - only the abstract `CanvasApiConfig` class. The purpose for this architecture is so that you can create several classes to support different Canvas environments - even if you only interact with one Canvas domain, that domain has a `test` and a `beta` instance. Config classes technically exist as properties on the Adapter class.
+**Config** classes are classes that configure basic things that the adapter needs to know about in order to interact with the Canvas API. No concrete classes are included in this package - only the abstract `CanvasApiConfig` class. The purpose for this architecture is so that you can create several classes to support different Canvas environments - even if you only interact with one Canvas domain, that domain has a `test` and a `beta` instance.
+
+The **Master API** class is essentially the "traffic controller" class, that worries about making sure the separate components (Client, Adapter, Config) know everything they need to know in order to execute the API call. This class exists as such so that it can be extended as needed. Basically, when asked to make a call, the API class should know everything about what is required to make said API call, including the Client, Adapter, and Config that are being used, the endpoint and method, and so on, making it easy to leverage this class for informational purposes (such as logging or caching... see the Laravel wrapper package for an example).
 
 ### Naming
 
@@ -324,7 +326,7 @@ An adapter is responsible for everything involved in the actual interaction with
 - reading pagination headers and determining whether another call is necessary to fulfill the requested transaction
 - reporting errors
 - collating results into a single array
-- recording all calls made in an transaction.
+- recording all calls made in a transaction.
 
 The `CanvasApiAdapterInterface` interface shows how an adapter should be implemented. Most of the basic methods in that interface (setters, getters, convenience aliases, etc.) are implemented for you in the `ExecutesApiCalls` trait, so generally speaking you should use that trait as a good first step. (Of course you can always override methods on the Trait if you prefer.)
 
@@ -337,9 +339,13 @@ On each adapter, therefore, that leaves you to implement the following methods o
 
 # Writing your own Clients
 
-All Clients are implementations of the `CanvasApiClientInterface` class, and passed in explicitly to the API object - and therefore writing your own Client classes is possible. The only implementation that is required by the interface is the implementation covered by the `HasApiAdapter` trait, and so using that trait will satisfy the implementation requirements, and you can begin writing your custom Client.
+All Clients are implementations of the `CanvasApiClientInterface` class, and passed in explicitly to the API object - and therefore writing your own Client classes is possible. There is no concrete implementation required by this interface class at this time...you can begin writing your custom Client anytime!.
 
 Theoretically this API library will be complete at some point, and so writing custom Clients won't be necessary, but as this library is still growing it is possible that some API functionality is missing, and you'll want to fill gaps yourself. If you do, please consider creating a pull request to add your adapter to this repo!
+
+# Extending the API class
+
+If you need additional functionality like logging or caching, you can write your own `CanvasApi` wrapper class that extends this `CanvasApi` class. The most common use cases would be to set some default values for the Config and Adapter classes, perhaps in the constructor, or to utilize the `beforeExecution()` and `afterExecution()` methods to perform additional operations before the transaction is kicked off or after it is finished.
 
 # Questions? Concerns?
 

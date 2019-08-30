@@ -114,8 +114,22 @@ class CanvasApi
     {
         $endpointParameters = $client->$method(...$arguments);
         $endpoint = (new CanvasApiEndpoint(...$endpointParameters))
-                ->setFinalEndpoint($this->config);
+        ->setFinalEndpoint($this->config);
 
-        return new CanvasApiResult($this->adapter->usingConfig($this->config)->transaction($endpoint));
+        $this->beforeExecution($endpoint);
+        $result = new CanvasApiResult($this->adapter->usingConfig($this->config)->transaction($endpoint));
+        $this->afterExecution($result);
+
+        return $result;
+    }
+
+    public function beforeExecution(CanvasApiEndpoint $endpoint)
+    {
+        //
+    }
+
+    public function afterExecution(CanvasApiResult $endpoint)
+    {
+        //
     }
 }
