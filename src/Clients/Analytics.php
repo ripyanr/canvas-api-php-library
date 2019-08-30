@@ -2,14 +2,16 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiClient;
 use Uncgits\CanvasApi\CanvasApiResult;
+use Uncgits\CanvasApi\Traits\HasApiAdapter;
 
 /**
  * https://canvas.instructure.com/doc/api/analytics.html
  */
-class Analytics extends CanvasApiClient
+class Analytics implements CanvasApiClientInterface
 {
+    use HasApiAdapter;
+
     public function getDepartmentLevelParticipationData($account_id, $term_id = null)
     {
         if (is_numeric($term_id)) {

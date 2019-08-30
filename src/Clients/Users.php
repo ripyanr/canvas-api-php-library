@@ -2,14 +2,16 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiClient;
 use Uncgits\CanvasApi\CanvasApiResult;
+use Uncgits\CanvasApi\Traits\HasApiAdapter;
 
 /**
  * https://canvas.instructure.com/doc/api/users.html
  */
-class Users extends CanvasApiClient
+class Users implements CanvasApiClientInterface
 {
+    use HasApiAdapter;
+
     /*
     |--------------------------------------------------------------------------
     | Methods

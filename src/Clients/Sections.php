@@ -2,14 +2,16 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiClient;
 use Uncgits\CanvasApi\CanvasApiResult;
+use Uncgits\CanvasApi\Traits\HasApiAdapter;
 
 /**
  * https://canvas.instructure.com/doc/api/sections.html
  */
-class Sections extends CanvasApiClient
+class Sections implements CanvasApiClientInterface
 {
+    use HasApiAdapter;
+
     public function listCourseSections($course_id)
     {
         return new CanvasApiResult($this->get('courses/' . $course_id . '/sections'));
