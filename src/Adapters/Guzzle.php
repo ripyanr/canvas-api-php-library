@@ -30,6 +30,9 @@ class Guzzle implements CanvasApiAdapterInterface
                 $string = http_build_query($this->parameters, null, '&');
                 $string = preg_replace('/%5B\d+%5D=/', '%5B%5D=', $string);
                 $requestOptions['query'] = $string;
+
+                // GET requests that need pagination will pass params back in the query string of pagination headers.
+                $this->setParameters([]);
             } else {
                 $requestOptions['json'] = $this->parameters;
             }
@@ -49,7 +52,6 @@ class Guzzle implements CanvasApiAdapterInterface
         // disable Guzzle exceptions. this class is responsible for providing an account of what happened, so we need
         // to get the response back no matter what.
         $requestOptions['http_errors'] = false;
-        dump('final: ' . $endpoint, $requestOptions);
         // perform the call
         $response = $client->$method($endpoint, $requestOptions);
 
@@ -59,24 +61,15 @@ class Guzzle implements CanvasApiAdapterInterface
 
     public function transaction($endpoint, $method, $calls = [])
     {
-        if (count($calls) > 10) {
-            dump('limit exceeded');
-            return $calls;
-        }
-
         // set up
         $this->validateParameters();
 
         // make the call(s)
-        dump($endpoint, $this->parameters);
         $calls[] = $result = $this->call($endpoint, $method);
         if (!is_null($result['response']['pagination'])) {
-            dump($result['response']['pagination']);
             if (isset($result['response']['pagination']['next']) || $result['response']['pagination']['current'] != $result['response']['pagination']['last']) {
-                $parsed = parse_url($result['response']['pagination']['next']);
-                parse_str($parsed['query'], $query);
-                $this->addParameters($query);
-                return $this->transaction($endpoint, $method, $calls);
+                $nextEndpoint = str_replace($this->config->getPrefix(), '', $result['response']['pagination']['next']);
+                return $this->transaction($nextEndpoint, $method, $calls);
             }
         }
 
