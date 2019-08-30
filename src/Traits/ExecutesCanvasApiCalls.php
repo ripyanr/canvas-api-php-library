@@ -93,26 +93,31 @@ trait ExecutesCanvasApiCalls
 
     public function get($endpoint)
     {
+        $this->checkConfig();
         return $this->transaction($endpoint, 'get');
     }
 
     public function post($endpoint)
     {
+        $this->checkConfig();
         return $this->transaction($endpoint, 'post');
     }
 
     public function patch($endpoint)
     {
+        $this->checkConfig();
         return $this->transaction($endpoint, 'patch');
     }
 
     public function put($endpoint)
     {
+        $this->checkConfig();
         return $this->transaction($endpoint, 'put');
     }
 
     public function delete($endpoint)
     {
+        $this->checkConfig();
         return $this->transaction($endpoint, 'delete');
     }
 
@@ -137,6 +142,13 @@ trait ExecutesCanvasApiCalls
 
             throw new CanvasApiParameterException('Missing required parameter(s) \''
                 . implode(',', $missingRequiredParametersBracketed) . '\'');
+        }
+    }
+
+    public function checkConfig()
+    {
+        if (is_null($this->config)) {
+            throw new CanvasApiConfigException('Config is not set on Adapter class');
         }
     }
 

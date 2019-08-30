@@ -84,4 +84,12 @@ interface CanvasApiClientInterface
      * @return array
      */
     public function delete($endpoint);
+
+    /**
+     * checks to ensure a valid adapter has been set before attempting to delegate
+     *
+     * @throws CanvasApiAdapterException
+     * @return void
+     */
+    public function checkAdapter();
 }

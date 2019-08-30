@@ -2,6 +2,7 @@
 
 namespace Uncgits\CanvasApi\Adapters;
 
+use Uncgits\CanvasApi\Exceptions\CanvasApiConfigException;
 use Uncgits\CanvasApi\Exceptions\CanvasApiParameterException;
 
 interface CanvasApiAdapterInterface
@@ -165,6 +166,14 @@ interface CanvasApiAdapterInterface
      * @return void
      */
     public function validateParameters();
+
+    /**
+     * Verifies that a valid Config has been set on the adapter
+     *
+     * @throws CanvasApiConfigException
+     * @return void
+     */
+    public function checkConfig();
 
     /**
      * Parses pagination headers to create a semantic array of URLS for "rel" values current, next, first, last

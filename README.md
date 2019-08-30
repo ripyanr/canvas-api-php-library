@@ -347,6 +347,10 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 # Version History
 
+## 0.3.1
+
+- Removing requirement for setting Client, Adapter, and Config in order - instead putting in error checking along the way so that pieces can be swapped out more easily.
+
 ## 0.3
 
 - Rewrite for new Client format

@@ -4,7 +4,6 @@ namespace Uncgits\CanvasApi;
 
 use Uncgits\CanvasApi\Clients\CanvasApiClientInterface;
 use Uncgits\CanvasApi\Exceptions\CanvasApiClientException;
-use Uncgits\CanvasApi\Exceptions\CanvasApiAdapterException;
 
 class CanvasApi
 {
@@ -38,26 +37,13 @@ class CanvasApi
 
     public function setAdapter($adapter)
     {
-        if (empty($this->client)) {
-            throw new CanvasApiClientException('Must set Client before setting Adapter.');
-        }
-
-        $this->client->setAdapter($adapter);
+        $this->adapter = $adapter;
         return $this;
     }
 
     public function setConfig($config)
     {
-        if (empty($this->client)) {
-            throw new CanvasApiClientException('Must set Client and Adapter before setting Config.');
-        }
-
-        if (empty($this->client->getAdapter())) {
-            throw new CanvasApiAdapterException('Must set Adapter before setting Config.');
-        }
-
-        $this->client->getAdapter()->setConfig($config);
-
+        $this->config = $config;
         return $this;
     }
 
@@ -67,10 +53,10 @@ class CanvasApi
             $this->setClient($this->client);
 
             if (!is_null($this->adapter)) {
-                $this->setAdapter($this->adapter);
+                $this->client->setAdapter($this->adapter);
 
                 if (!is_null($this->config)) {
-                    $this->setConfig($this->config);
+                    $this->client->getAdapter()->setConfig($this->config);
                 }
             }
         }
@@ -104,6 +90,10 @@ class CanvasApi
             return $result;
         }
 
-        return $this->client->$method(...$arguments);
+        if (!is_null($this->client)) {
+            return $this->client->$method(...$arguments);
+        }
+
+        throw new CanvasApiClientException('Client is not set on API class');
     }
 }

@@ -90,6 +90,7 @@ trait HasApiAdapter
      */
     public function get($endpoint)
     {
+        $this->checkAdapter();
         return $this->adapter->get($endpoint);
     }
 
@@ -101,6 +102,7 @@ trait HasApiAdapter
      */
     public function post($endpoint)
     {
+        $this->checkAdapter();
         return $this->adapter->post($endpoint);
     }
 
@@ -112,6 +114,7 @@ trait HasApiAdapter
      */
     public function patch($endpoint)
     {
+        $this->checkAdapter();
         return $this->adapter->patch($endpoint);
     }
 
@@ -123,6 +126,7 @@ trait HasApiAdapter
      */
     public function put($endpoint)
     {
+        $this->checkAdapter();
         return $this->adapter->put($endpoint);
     }
 
@@ -134,7 +138,15 @@ trait HasApiAdapter
      */
     public function delete($endpoint)
     {
+        $this->checkAdapter();
         return $this->adapter->delete($endpoint);
+    }
+
+    public function checkAdapter()
+    {
+        if (is_null($this->adapter)) {
+            throw new CanvasApiAdapterException('Adapter is not set on Client class');
+        }
     }
 
     /**
@@ -146,6 +158,8 @@ trait HasApiAdapter
      */
     public function __call($method, $arguments)
     {
+        $this->checkAdapter();
+
         // delegate to adapter
         $this->adapter->$method(...$arguments);
         return $this;
