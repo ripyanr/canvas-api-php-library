@@ -5,13 +5,13 @@ namespace Uncgits\CanvasApi\Adapters;
 use GuzzleHttp\Client;
 use Uncgits\CanvasApi\Traits\ExecutesCanvasApiCalls;
 
-class Guzzle implements CanvasApiAdapter
+class Guzzle implements CanvasApiAdapterInterface
 {
     use ExecutesCanvasApiCalls;
 
     /*
     |--------------------------------------------------------------------------
-    | Implementing CanvasApiAdapter
+    | Implementing CanvasApiAdapterInterface
     |--------------------------------------------------------------------------
     */
 
@@ -30,6 +30,9 @@ class Guzzle implements CanvasApiAdapter
                 $string = http_build_query($this->parameters, null, '&');
                 $string = preg_replace('/%5B\d+%5D=/', '%5B%5D=', $string);
                 $requestOptions['query'] = $string;
+
+                // GET requests that need pagination will pass params back in the query string of pagination headers.
+                $this->setParameters([]);
             } else {
                 $requestOptions['json'] = $this->parameters;
             }
@@ -49,7 +52,6 @@ class Guzzle implements CanvasApiAdapter
         // disable Guzzle exceptions. this class is responsible for providing an account of what happened, so we need
         // to get the response back no matter what.
         $requestOptions['http_errors'] = false;
-
         // perform the call
         $response = $client->$method($endpoint, $requestOptions);
 

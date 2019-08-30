@@ -2,14 +2,16 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiClient;
 use Uncgits\CanvasApi\CanvasApiResult;
+use Uncgits\CanvasApi\Traits\HasApiAdapter;
 
 /**
  * https://canvas.instructure.com/doc/api/courses.html
  */
-class Courses extends CanvasApiClient
+class Courses implements CanvasApiClientInterface
 {
+    use HasApiAdapter;
+
     public function listCourses()
     {
         return new CanvasApiResult($this->get('courses'));
@@ -50,6 +52,12 @@ class Courses extends CanvasApiClient
     public function getSingleUser($course_id, $id)
     {
         return new CanvasApiResult($this->get('courses/' . $course_id . '/users/' . $id));
+    }
+
+    // alias
+    public function getUser($course_id, $id)
+    {
+        return $this->getSingleUser($course_id, $id);
     }
 
     public function previewProcessedHtml($course_id)
