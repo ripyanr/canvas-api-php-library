@@ -351,6 +351,7 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 - Rewrite for new Client format
 - Rework pagination bug in Guzzle adapter where pagination failed if other query parameters were present
+- `using()` method is now temporary and does not overwrite original Client setting on API class
 
 ## 0.2
 
