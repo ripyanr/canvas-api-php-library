@@ -3,15 +3,12 @@
 namespace Uncgits\CanvasApi\Clients;
 
 use Uncgits\CanvasApi\CanvasApiResult;
-use Uncgits\CanvasApi\Traits\HasApiAdapter;
 
 /**
  * https://canvas.instructure.com/doc/api/quiz_submissions.html
  */
 class QuizSubmissions implements CanvasApiClientInterface
 {
-    use HasApiAdapter;
-
     public function getAllQuizSubmissions($course_id, $quiz_id)
     {
         return new CanvasApiResult($this->get('courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions'));

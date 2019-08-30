@@ -3,7 +3,8 @@
 namespace Uncgits\CanvasApi\Traits;
 
 use Uncgits\CanvasApi\CanvasApiConfig;
-use Uncgits\CanvasApi\Exceptions\CanvasApiConfigException;
+use Uncgits\CanvasApi\CanvasApiEndpoint;
+use Uncgits\CanvasApi\Exceptions\CanvasApiParameterException;
 
 trait ExecutesCanvasApiCalls
 {
@@ -16,7 +17,7 @@ trait ExecutesCanvasApiCalls
     /**
      * The CanvasApiConfig object used to make API calls.
      *
-     * @var undefined
+     * @var CanvasApiConfig
      */
     protected $config;
 
@@ -43,19 +44,6 @@ trait ExecutesCanvasApiCalls
      */
     protected $requiredParameters = [];
 
-    public function setConfig($config)
-    {
-        if (is_string($config) && class_exists($config)) {
-            $config = new $config;
-        }
-
-        if (is_a($config, CanvasApiConfig::class)) {
-            $this->config = $config;
-            return;
-        }
-
-        throw new CanvasApiConfigException('Client class must receive CanvasApiConfig object or class name in constructor');
-    }
 
     public function setAdditionalHeaders(array $additionalHeaders)
     {
@@ -126,10 +114,10 @@ trait ExecutesCanvasApiCalls
         return $this->transaction($endpoint, 'delete');
     }
 
-    public function validateParameters()
+    public function validateParameters(CanvasApiEndpoint $endpoint)
     {
         // flatten out params array to dot notation for easy checking
-        $missingRequiredParameters = array_diff($this->requiredParameters, array_keys($this->dot($this->parameters)));
+        $missingRequiredParameters = array_diff($endpoint->getRequiredParameters(), array_keys($this->dot($this->parameters)));
 
         $missingRequiredParametersBracketed = [];
         if (!empty($missingRequiredParameters)) {
@@ -147,13 +135,6 @@ trait ExecutesCanvasApiCalls
 
             throw new CanvasApiParameterException('Missing required parameter(s) \''
                 . implode(',', $missingRequiredParametersBracketed) . '\'');
-        }
-    }
-
-    public function checkConfig()
-    {
-        if (is_null($this->config)) {
-            throw new CanvasApiConfigException('Config is not set on Adapter class');
         }
     }
 

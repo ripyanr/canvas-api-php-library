@@ -3,15 +3,12 @@
 namespace Uncgits\CanvasApi\Clients;
 
 use Uncgits\CanvasApi\CanvasApiResult;
-use Uncgits\CanvasApi\Traits\HasApiAdapter;
 
 /**
  * https://canvas.instructure.com/doc/api/enrollments.html
  */
 class Enrollments implements CanvasApiClientInterface
 {
-    use HasApiAdapter;
-
     public function listCourseEnrollments($course_id)
     {
         return new CanvasApiResult($this->get('courses/' . $course_id . '/enrollments'));
