@@ -129,6 +129,42 @@ $result = $accountsClient->listAccounts(); // methods are named as they appear i
 var_dump($result->getContent()); // you receive a CanvasApiResult object
 ```
 
+### Client fluent shortcut
+
+You may want to use a different Client while maintaining the same Adapter and Config. You can do this permanently by using the `setClient()` on the API class, or you can do it for a single transaction using the fluent `using()` chainable method.
+
+> `using()` will accept a complete class name (with namespace) for a Client class, or a simplified class name for a built-in Client class, like 'users' or 'quizsubmissions'.
+
+```php
+use Uncgits\CanvasApi\Clients\Users;
+use \Uncgits\CanvasApi\Clients\Accounts;
+use \Uncgits\CanvasApi\Adapters\Guzzle;
+use App\CanvasConfigs\TestEnvironment;
+
+$api = new \Uncgits\CanvasApi\CanvasApi([
+    'client' => Accounts::class,
+    'adapter' => Guzzle::class,
+    'config' => TestEnvironment::class,
+]);
+
+// API class will use Accounts client.
+$api->listAccounts();
+
+// use explicit setter - now API class will use Users client for all future calls
+$api->setClient(Users::class);
+$api->showUserDetails();
+$api->getUserSettings(); // still Users client
+
+// OR, use fluent setter with explicit class
+$api->using(Users::class)->showUserDetails();
+$api->listAccounts(); // back to original Accounts Client
+
+// OR, fluent setter with implied class (from default library)
+$api->using('users')->showUserDetails();
+$api->listAccounts(); // back to Accounts Client
+
+```
+
 ## Setting parameters
 
 Some API calls need additional parameters, and there are two different ways to pass them. The way(s) you choose are directly in line with the following logic:

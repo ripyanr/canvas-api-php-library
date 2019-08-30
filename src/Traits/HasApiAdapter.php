@@ -23,7 +23,7 @@ trait HasApiAdapter
 
         if ($adapter instanceof CanvasApiAdapterInterface) {
             $this->adapter = $adapter;
-            return;
+            return $this->adapter;
         }
 
         throw new CanvasApiAdapterException('Unknown or invalid Canvas API Adapter.');
@@ -83,7 +83,7 @@ trait HasApiAdapter
     */
 
     /**
-     * Delegate a GET request to the adapter and return the adapter
+     * Delegate a GET request to the adapter and return the calls array
      *
      * @param mixed $endpoint
      * @return array
@@ -94,7 +94,7 @@ trait HasApiAdapter
     }
 
     /**
-     * Delegate a POST request to the adapter and return the adapter
+     * Delegate a POST request to the adapter and return the calls array
      *
      * @param mixed $endpoint
      * @return array
@@ -105,7 +105,7 @@ trait HasApiAdapter
     }
 
     /**
-     * Delegate a PATCH request to the adapter and return the adapter
+     * Delegate a PATCH request to the adapter and return the calls array
      *
      * @param mixed $endpoint
      * @return array
@@ -116,7 +116,7 @@ trait HasApiAdapter
     }
 
     /**
-     * Delegate a PUT request to the adapter and return the adapter
+     * Delegate a PUT request to the adapter and return the calls array
      *
      * @param mixed $endpoint
      * @return array
@@ -127,7 +127,7 @@ trait HasApiAdapter
     }
 
     /**
-     * Delegate a DELETE request to the adapter and return the adapter
+     * Delegate a DELETE request to the adapter and return the calls array
      *
      * @param mixed $endpoint
      * @return array

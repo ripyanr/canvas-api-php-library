@@ -10,7 +10,7 @@ interface CanvasApiClientInterface
      * Sets the adapter (implements CanvasApiAdapterInterface) used to make the call
      *
      * @param CanvasApiAdapterInterface|string $adapter
-     * @return self
+     * @return CanvasApiAdapterInterface
      */
     public function setAdapter($adapter);
 

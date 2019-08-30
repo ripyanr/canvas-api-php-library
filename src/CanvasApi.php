@@ -12,6 +12,8 @@ class CanvasApi
     protected $adapter;
     protected $config;
 
+    protected $tempClient;
+
     public function __construct(array $setup = [])
     {
         $this->client = $setup['client'] ?? null;
@@ -84,17 +86,24 @@ class CanvasApi
         }
 
         if (!class_exists($client)) {
-            throw new \Exception('Class ' . $client . ' not found');
+            throw new \Exception('Client class ' . $client . ' not found');
         }
 
-        $this->client = new $client;
-
-        return $this->setup();
+        $this->tempClient = new $client;
+        return $this;
     }
 
     public function __call($method, $arguments)
     {
         // delegate to client
+
+        if (!is_null($this->tempClient)) {
+            $this->tempClient->setAdapter($this->adapter)->setConfig($this->config);
+            $result = $this->tempClient->$method(...$arguments);
+            $this->tempClient = null;
+            return $result;
+        }
+
         return $this->client->$method(...$arguments);
     }
 }
