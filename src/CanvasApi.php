@@ -2,26 +2,36 @@
 
 namespace Uncgits\CanvasApi;
 
+use Uncgits\CanvasApi\Traits\SetsCallParameters;
 use Uncgits\CanvasApi\Clients\CanvasApiClientInterface;
+use Uncgits\CanvasApi\Adapters\CanvasApiAdapterInterface;
 use Uncgits\CanvasApi\Exceptions\CanvasApiClientException;
+use Uncgits\CanvasApi\Exceptions\CanvasApiConfigException;
 use Uncgits\CanvasApi\Exceptions\CanvasApiAdapterException;
 
 class CanvasApi
 {
+    use SetsCallParameters;
+
     protected $client;
     protected $adapter;
     protected $config;
 
+    protected $tempClient;
+
     public function __construct(array $setup = [])
     {
-        $this->client = $setup['client'] ?? null;
-        $this->adapter = $setup['adapter'] ?? null;
-        $this->config = $setup['config'] ?? null;
-        $this->setup();
+        $this->setClient($setup['client'] ?: null);
+        $this->setAdapter($setup['adapter'] ?: null);
+        $this->setConfig($setup['config'] ?: null);
     }
 
     public function setClient($client)
     {
+        if (is_null($client)) {
+            return;
+        }
+
         if (is_string($client) && class_exists($client)) {
             $client = new $client;
         }
@@ -36,44 +46,39 @@ class CanvasApi
 
     public function setAdapter($adapter)
     {
-        if (empty($this->client)) {
-            throw new CanvasApiClientException('Must set Client before setting Adapter.');
+        if (is_null($adapter)) {
+            return;
         }
 
-        $this->client->setAdapter($adapter);
-        return $this;
+
+        if (is_string($adapter) && class_exists($adapter)) {
+            $adapter = new $adapter;
+        }
+
+        if ($adapter instanceof CanvasApiAdapterInterface) {
+            $this->adapter = $adapter;
+            return $this;
+        }
+
+        throw new CanvasApiAdapterException('Unknown or invalid Canvas API Adapter.');
     }
 
     public function setConfig($config)
     {
-        if (empty($this->client)) {
-            throw new CanvasApiClientException('Must set Client and Adapter before setting Config.');
+        if (is_null($config)) {
+            return;
         }
 
-        if (empty($this->client->getAdapter())) {
-            throw new CanvasApiAdapterException('Must set Adapter before setting Config.');
+        if (is_string($config) && class_exists($config)) {
+            $config = new $config;
         }
 
-        $this->client->getAdapter()->setConfig($config);
-
-        return $this;
-    }
-
-    public function setup()
-    {
-        if (!is_null($this->client)) {
-            $this->setClient($this->client);
-
-            if (!is_null($this->adapter)) {
-                $this->setAdapter($this->adapter);
-
-                if (!is_null($this->config)) {
-                    $this->setConfig($this->config);
-                }
-            }
+        if (is_a($config, CanvasApiConfig::class)) {
+            $this->config = $config;
+            return $this;
         }
 
-        return $this;
+        throw new CanvasApiConfigException('Client class must receive CanvasApiConfig object or class name in constructor');
     }
 
     public function using($client)
@@ -84,17 +89,34 @@ class CanvasApi
         }
 
         if (!class_exists($client)) {
-            throw new \Exception('Class ' . $client . ' not found');
+            throw new \Exception('Client class ' . $client . ' not found');
         }
 
-        $this->client = new $client;
-
-        return $this->setup();
+        $this->tempClient = new $client;
+        return $this;
     }
 
     public function __call($method, $arguments)
     {
-        // delegate to client
-        return $this->client->$method(...$arguments);
+        // determine active client
+        $activeClient = $this->tempClient ?: $this->client;
+
+        // do we have a valid client set?
+        if (is_null($activeClient)) {
+            throw new CanvasApiClientException('Client is not set on API class');
+        }
+
+        $this->tempClient = null; // reset
+
+        $endpointParameters = $activeClient->$method(...$arguments);
+        $endpoint = (new CanvasApiEndpoint(...$endpointParameters))
+        ->setFinalEndpoint($this->config);
+
+        return $this->execute($activeClient, $endpoint, $method, $arguments);
+    }
+
+    public function execute(CanvasApiClientInterface $client, CanvasApiEndpoint $endpoint, $method, $arguments)
+    {
+        return new CanvasApiResult($this->adapter->usingConfig($this->config)->transaction($endpoint));
     }
 }

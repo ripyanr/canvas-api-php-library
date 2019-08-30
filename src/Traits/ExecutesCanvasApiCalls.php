@@ -3,7 +3,8 @@
 namespace Uncgits\CanvasApi\Traits;
 
 use Uncgits\CanvasApi\CanvasApiConfig;
-use Uncgits\CanvasApi\Exceptions\CanvasApiConfigException;
+use Uncgits\CanvasApi\CanvasApiEndpoint;
+use Uncgits\CanvasApi\Exceptions\CanvasApiParameterException;
 
 trait ExecutesCanvasApiCalls
 {
@@ -16,7 +17,7 @@ trait ExecutesCanvasApiCalls
     /**
      * The CanvasApiConfig object used to make API calls.
      *
-     * @var undefined
+     * @var CanvasApiConfig
      */
     protected $config;
 
@@ -43,19 +44,6 @@ trait ExecutesCanvasApiCalls
      */
     protected $requiredParameters = [];
 
-    public function setConfig($config)
-    {
-        if (is_string($config) && class_exists($config)) {
-            $config = new $config;
-        }
-
-        if (is_a($config, CanvasApiConfig::class)) {
-            $this->config = $config;
-            return;
-        }
-
-        throw new CanvasApiConfigException('Client class must receive CanvasApiConfig object or class name in constructor');
-    }
 
     public function setAdditionalHeaders(array $additionalHeaders)
     {
@@ -80,6 +68,11 @@ trait ExecutesCanvasApiCalls
         return $this->parameters;
     }
 
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
     public function addParameters(array $parameters)
     {
         $this->parameters = array_merge($this->parameters, $parameters);
@@ -93,33 +86,38 @@ trait ExecutesCanvasApiCalls
 
     public function get($endpoint)
     {
+        $this->checkConfig();
         return $this->transaction($endpoint, 'get');
     }
 
     public function post($endpoint)
     {
+        $this->checkConfig();
         return $this->transaction($endpoint, 'post');
     }
 
     public function patch($endpoint)
     {
+        $this->checkConfig();
         return $this->transaction($endpoint, 'patch');
     }
 
     public function put($endpoint)
     {
+        $this->checkConfig();
         return $this->transaction($endpoint, 'put');
     }
 
     public function delete($endpoint)
     {
+        $this->checkConfig();
         return $this->transaction($endpoint, 'delete');
     }
 
-    public function validateParameters()
+    public function validateParameters(CanvasApiEndpoint $endpoint)
     {
         // flatten out params array to dot notation for easy checking
-        $missingRequiredParameters = array_diff($this->requiredParameters, array_keys($this->dot($this->parameters)));
+        $missingRequiredParameters = array_diff($endpoint->getRequiredParameters(), array_keys($this->dot($this->parameters)));
 
         $missingRequiredParametersBracketed = [];
         if (!empty($missingRequiredParameters)) {

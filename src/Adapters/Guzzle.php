@@ -3,6 +3,8 @@
 namespace Uncgits\CanvasApi\Adapters;
 
 use GuzzleHttp\Client;
+use Uncgits\CanvasApi\CanvasApiConfig;
+use Uncgits\CanvasApi\CanvasApiEndpoint;
 use Uncgits\CanvasApi\Traits\ExecutesCanvasApiCalls;
 
 class Guzzle implements CanvasApiAdapterInterface
@@ -17,9 +19,6 @@ class Guzzle implements CanvasApiAdapterInterface
 
     public function call($endpoint, $method)
     {
-        // assemble the final request URI from host and endpoint
-        $endpoint = 'https://' . $this->config->getApiHost() . $this->config->getPrefix() . $endpoint;
-
         // instantiate Guzzle client
         $client = new Client;
 
@@ -59,17 +58,28 @@ class Guzzle implements CanvasApiAdapterInterface
         return $this->normalizeResult($endpoint, $method, $requestOptions, $response);
     }
 
-    public function transaction($endpoint, $method, $calls = [])
+    public function usingConfig(CanvasApiConfig $config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
+    public function transaction(CanvasApiEndpoint $endpoint, $calls = [])
     {
         // set up
-        $this->validateParameters();
+        $this->validateParameters($endpoint);
 
         // make the call(s)
-        $calls[] = $result = $this->call($endpoint, $method);
+        $calls[] = $result = $this->call($endpoint->getEndpoint(), $endpoint->getMethod());
         if (!is_null($result['response']['pagination'])) {
             if (isset($result['response']['pagination']['next']) || $result['response']['pagination']['current'] != $result['response']['pagination']['last']) {
-                $nextEndpoint = str_replace($this->config->getPrefix(), '', $result['response']['pagination']['next']);
-                return $this->transaction($nextEndpoint, $method, $calls);
+                $nextEndpoint = new CanvasApiEndpoint(
+                    str_replace($this->config->getPrefix(), '', $result['response']['pagination']['next']),
+                    $endpoint->getMethod(),
+                    $endpoint->getRequiredParameters()
+                );
+
+                return $this->transaction($nextEndpoint->setFinalEndpoint($this->config), $calls);
             }
         }
 
