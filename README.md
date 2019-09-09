@@ -357,7 +357,7 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 - Yet another rewrite.
 - Centralizing everything back onto the API class, so that it is essentially all-knowing when a transaction is made.
-- Adds simple extenders `beforeExecution()` and `afterExecution()` for easy extension of the API class
+- simplify `execute()` method for easy overwriting in wrapper classes
 
 ## 0.3
 

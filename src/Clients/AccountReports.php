@@ -2,8 +2,6 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiResult;
-
 /**
  * https://canvas.instructure.com/doc/api/reports.html
  */
@@ -11,26 +9,41 @@ class AccountReports implements CanvasApiClientInterface
 {
     public function listAvailableReports($account_id)
     {
-        return new CanvasApiResult($this->get('accounts/' . $account_id . '/reports'));
+        return [
+            'accounts/' . $account_id . '/reports',
+            'get'
+        ];
     }
 
     public function startReport($account_id, $report)
     {
-        return new CanvasApiResult($this->post('accounts/' . $account_id . '/reports/' . $report));
+        return [
+            'accounts/' . $account_id . '/reports/' . $report,
+            'post'
+        ];
     }
 
     public function getIndexOfReport($account_id, $report)
     {
-        return new CanvasApiResult($this->get('accounts/' . $account_id . '/reports/' . $report));
+        return [
+            'accounts/' . $account_id . '/reports/' . $report,
+            'get'
+        ];
     }
 
     public function getStatusOfReport($account_id, $report, $id)
     {
-        return new CanvasApiResult($this->get('accounts/' . $account_id . '/reports/' . $report . '/' . $id));
+        return [
+            'accounts/' . $account_id . '/reports/' . $report . '/' . $id,
+            'get'
+        ];
     }
 
     public function deleteReport($account_id, $report, $id)
     {
-        return new CanvasApiResult($this->delete('accounts/' . $account_id . '/reports/' . $report . '/' . $id));
+        return [
+            'accounts/' . $account_id . '/reports/' . $report . '/' . $id,
+            'delete'
+        ];
     }
 }

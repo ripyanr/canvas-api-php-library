@@ -2,8 +2,6 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiResult;
-
 /**
  * https://canvas.instructure.com/doc/api/quizzes.html
  */
@@ -11,12 +9,18 @@ class Quizzes implements CanvasApiClientInterface
 {
     public function listQuizzesInCourse($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/quizzes'));
+        return [
+            'courses/' . $course_id . '/quizzes',
+            'get'
+        ];
     }
 
     public function getSingleQuiz($course_id, $id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/quizzes/' . $id));
+        return [
+            'courses/' . $course_id . '/quizzes/' . $id,
+            'get'
+        ];
     }
 
     // alias
@@ -28,29 +32,44 @@ class Quizzes implements CanvasApiClientInterface
     public function createQuiz($course_id)
     {
         $this->setRequiredParameters(['quiz.title']);
-        return new CanvasApiResult($this->post('courses/' . $course_id . '/quizzes'));
+        return [
+            'courses/' . $course_id . '/quizzes',
+            'post'
+        ];
     }
 
     public function editQuiz($course_id, $id)
     {
-        return new CanvasApiResult($this->put('courses/' . $course_id . '/quizzes/' . $id));
+        return [
+            'courses/' . $course_id . '/quizzes/' . $id,
+            'put'
+        ];
     }
 
     public function deleteQuiz($course_id, $id)
     {
-        return new CanvasApiResult($this->delete('courses/' . $course_id . '/quizzes/' . $id));
+        return [
+            'courses/' . $course_id . '/quizzes/' . $id,
+            'delete'
+        ];
     }
 
     public function reorderQuizItems($course_id, $id)
     {
         // TODO: accept wildcards when validating params?
         // $this->setRequiredParameters(['order']);
-        return new CanvasApiResult($this->post('courses/' . $course_id . '/quizzes/' . $id . '/reorder'));
+        return [
+            'courses/' . $course_id . '/quizzes/' . $id . '/reorder',
+            'post'
+        ];
     }
 
     public function validateQuizAccessCode($course_id, $id)
     {
         $this->setRequiredParameters(['access_code']);
-        return new CanvasApiResult($this->post('courses/' . $course_id . '/quizzes/' . $id . '/validate_access_code'));
+        return [
+            'courses/' . $course_id . '/quizzes/' . $id . '/validate_access_code',
+            'post'
+        ];
     }
 }
