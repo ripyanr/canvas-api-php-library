@@ -355,9 +355,11 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 ## 0.4
 
-- Yet another rewrite.
-- Centralizing everything back onto the API class, so that it is essentially all-knowing when a transaction is made.
+- Yet another rewrite...centralizing everything back onto the API class, so that it is essentially all-knowing when a transaction is made.
 - simplify `execute()` method for easy overwriting in wrapper classes
+- adds clients:
+    - SIS Imports
+    - SIS Import Errors
 
 ## 0.3
 
