@@ -2,8 +2,6 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiResult;
-
 /**
  * https://canvas.instructure.com/doc/api/analytics.html
  */
@@ -11,55 +9,82 @@ class Analytics implements CanvasApiClientInterface
 {
     public function getDepartmentLevelParticipationData($account_id, $term_id = null)
     {
-        if (is_numeric($term_id)) {
-            $term_id = 'terms/' . $term_id;
-        }
-        return new CanvasApiResult($this->get('accounts/' . $account_id . '/analytics/' . $term_id . '/activity'));
+        return [
+            'accounts/' . $account_id . '/analytics/' . $this->parseTerm($term_id) . 'activity',
+            'get'
+        ];
     }
 
     public function getDepartmentLevelGradeData($account_id, $term_id = null)
     {
-        if (is_numeric($term_id)) {
-            $term_id = 'terms/' . $term_id;
-        }
-        return new CanvasApiResult($this->get('accounts/' . $account_id . '/analytics/' . $term_id . '/grades'));
+        return [
+            'accounts/' . $account_id . '/analytics/' . $this->parseTerm($term_id) . 'grades',
+            'get'
+        ];
     }
 
     public function getDepartmentLevelStatistics($account_id, $term_id = null)
     {
-        if (is_numeric($term_id)) {
-            $term_id = 'terms/' . $term_id;
-        }
-        return new CanvasApiResult($this->get('accounts/' . $account_id . '/analytics/' . $term_id . '/statistics'));
+        return [
+            'accounts/' . $account_id . '/analytics/' . $this->parseTerm($term_id) . 'statistics',
+            'get'
+        ];
     }
 
     public function getCourseLevelParticipationData($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/analytics/activity'));
+        return [
+            'courses/' . $course_id . '/analytics/activity',
+            'get'
+        ];
     }
 
     public function getCourseLevelAssignmentData($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/analytics/assignments'));
+        return [
+            'courses/' . $course_id . '/analytics/assignments',
+            'get'
+        ];
     }
 
     public function getCourseLevelStudentSummaryData($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/analytics/student_summaries'));
+        return [
+            'courses/' . $course_id . '/analytics/student_summaries',
+            'get'
+        ];
     }
 
     public function getUserInCourseLevelParticipationData($course_id, $student_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/analytics/users/' . $student_id . '/activity'));
+        return [
+            'courses/' . $course_id . '/analytics/users/' . $student_id . '/activity',
+            'get'
+        ];
     }
 
     public function getUserInCourseLevelAssignmentData($course_id, $student_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/analytics/users/' . $student_id . '/assignments'));
+        return [
+            'courses/' . $course_id . '/analytics/users/' . $student_id . '/assignments',
+            'get'
+        ];
     }
 
     public function getUserInCourseLevelMessagingData($course_id, $student_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/analytics/users/' . $student_id . '/communication'));
+        return [
+            'courses/' . $course_id . '/analytics/users/' . $student_id . '/communication',
+            'get'
+        ];
+    }
+
+    private function parseTerm($term_id)
+    {
+        if (is_numeric($term_id)) {
+            return 'terms/' . $term_id . '/';
+        }
+
+        return '';
     }
 }

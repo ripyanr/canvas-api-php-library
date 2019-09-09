@@ -2,8 +2,6 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiResult;
-
 /**
  * https://canvas.instructure.com/doc/api/enrollments.html
  */
@@ -11,22 +9,34 @@ class Enrollments implements CanvasApiClientInterface
 {
     public function listCourseEnrollments($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/enrollments'));
+        return [
+            'courses/' . $course_id . '/enrollments',
+            'get'
+        ];
     }
 
     public function listSectionEnrollments($section_id)
     {
-        return new CanvasApiResult($this->get('sections/' . $section_id . '/enrollments'));
+        return [
+            'sections/' . $section_id . '/enrollments',
+            'get'
+        ];
     }
 
     public function listUserEnrollments($user_id)
     {
-        return new CanvasApiResult($this->get('users/' . $user_id . '/enrollments'));
+        return [
+            'users/' . $user_id . '/enrollments',
+            'get'
+        ];
     }
 
     public function getEnrollmentById($account_id, $id)
     {
-        return new CanvasApiResult($this->get('accounts/' . $account_id . '/enrollments/' . $id));
+        return [
+            'accounts/' . $account_id . '/enrollments/' . $id,
+            'get'
+        ];
     }
 
     // alias
@@ -38,18 +48,27 @@ class Enrollments implements CanvasApiClientInterface
     public function enrollUserInCourse($course_id)
     {
         $this->setRequiredParameters(['enrollment.user_id', 'enrollment.type']);
-        return new CanvasApiResult($this->post('courses/' . $course_id . '/enrollments'));
+        return [
+            'courses/' . $course_id . '/enrollments',
+            'post'
+        ];
     }
 
     public function enrollUserInSection($section_id)
     {
         $this->setRequiredParameters(['enrollment.user_id', 'enrollment.type']);
-        return new CanvasApiResult($this->post('sections/' . $section_id . '/enrollments'));
+        return [
+            'sections/' . $section_id . '/enrollments',
+            'post'
+        ];
     }
 
     public function concludeDeactivateOrDeleteEnrollment($course_id, $id)
     {
-        return new CanvasApiResult($this->delete('courses/' . $course_id . '/enrollments/' . $id));
+        return [
+            'courses/' . $course_id . '/enrollments/' . $id,
+            'delete'
+        ];
     }
 
     // helper
@@ -82,16 +101,25 @@ class Enrollments implements CanvasApiClientInterface
 
     public function acceptCourseInvitation($course_id, $id)
     {
-        return new CanvasApiResult($this->post('courses/' . $course_id . '/enrollments/' . $id . '/accept'));
+        return [
+            'courses/' . $course_id . '/enrollments/' . $id . '/accept',
+            'post'
+        ];
     }
 
     public function rejectCourseInvitation($course_id, $id)
     {
-        return new CanvasApiResult($this->post('courses/' . $course_id . '/enrollments/' . $id . '/reject'));
+        return [
+            'courses/' . $course_id . '/enrollments/' . $id . '/reject',
+            'post'
+        ];
     }
 
     public function addLastAttendedDateToEnrollment($course_id, $user_id)
     {
-        return new CanvasApiResult($this->put('courses/' . $course_id . '/users/' . $user_id . '/last_attended'));
+        return [
+            'courses/' . $course_id . '/users/' . $user_id . '/last_attended',
+            'put'
+        ];
     }
 }

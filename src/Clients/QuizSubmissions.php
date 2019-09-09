@@ -2,8 +2,6 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiResult;
-
 /**
  * https://canvas.instructure.com/doc/api/quiz_submissions.html
  */
@@ -11,39 +9,60 @@ class QuizSubmissions implements CanvasApiClientInterface
 {
     public function getAllQuizSubmissions($course_id, $quiz_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions'));
+        return [
+            'courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions',
+            'get'
+        ];
     }
 
     public function getQuizSubmission($course_id, $quiz_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/quizzes/' . $quiz_id . '/submission'));
+        return [
+            'courses/' . $course_id . '/quizzes/' . $quiz_id . '/submission',
+            'get'
+        ];
     }
 
     public function getSingleQuizSubmission($course_id, $quiz_id, $id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions/' . $id));
+        return [
+            'courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions/' . $id,
+            'get'
+        ];
     }
 
     public function createQuizSubmission($course_id, $quiz_id)
     {
-        return new CanvasApiResult($this->post('courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions'));
+        return [
+            'courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions',
+            'post'
+        ];
     }
 
     public function updateStudentQuestionScoresAndComments($course_id, $quiz_id, $id)
     {
         //TODO: wildcard parameter validation
         // $this->setRequiredParameters(['quiz_submissions.*.attempt']);
-        return new CanvasApiResult($this->put('courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions/' . $id));
+        return [
+            'courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions/' . $id,
+            'put'
+        ];
     }
 
     public function completeQuizSubmission($course_id, $quiz_id, $id)
     {
         $this->setRequiredParameters(['attempt', 'validation_token']);
-        return new CanvasApiResult($this->post('courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions/' . $id . '/complete'));
+        return [
+            'courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions/' . $id . '/complete',
+            'post'
+        ];
     }
 
     public function getCurrentQuizSubmissionTimes($course_id, $quiz_id, $id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions/' . $id . '/time'));
+        return [
+            'courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions/' . $id . '/time',
+            'get'
+        ];
     }
 }

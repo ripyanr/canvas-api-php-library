@@ -2,8 +2,6 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiResult;
-
 /**
  * https://canvas.instructure.com/doc/api/roles.html
  */
@@ -11,33 +9,51 @@ class Roles implements CanvasApiClientInterface
 {
     public function listRoles($account_id)
     {
-        return new CanvasApiResult($this->get('accounts/' . $account_id . '/roles'));
+        return [
+            'accounts/' . $account_id . '/roles',
+            'get'
+        ];
     }
 
     public function getRole($account_id, $id)
     {
-        return new CanvasApiResult($this->get('accounts/' . $account_id . '/roles/' . $id));
+        return [
+            'accounts/' . $account_id . '/roles/' . $id,
+            'get'
+        ];
     }
 
     public function createRole($account_id)
     {
         $this->setRequiredParameters(['label']);
-        return new CanvasApiResult($this->post('accounts/' . $account_id . '/roles'));
+        return [
+            'accounts/' . $account_id . '/roles',
+            'post'
+        ];
     }
 
     public function deactivateRole($account_id, $id)
     {
-        return new CanvasApiResult($this->delete('accounts/' . $account_id . '/roles/' . $id));
+        return [
+            'accounts/' . $account_id . '/roles/' . $id,
+            'delete'
+        ];
     }
 
     public function activateRole($account_id, $id)
     {
-        return new CanvasApiResult($this->post('accounts/' . $account_id . '/roles/' . $id . '/activate'));
+        return [
+            'accounts/' . $account_id . '/roles/' . $id . '/activate',
+            'post'
+        ];
     }
 
     public function updateRole($account_id, $id)
     {
         // $this->setRequiredParameters(['role_id']);
-        return new CanvasApiResult($this->put('accounts/' . $account_id . '/roles/' . $id));
+        return [
+            'accounts/' . $account_id . '/roles/' . $id,
+            'put'
+        ];
     }
 }

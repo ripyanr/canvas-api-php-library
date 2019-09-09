@@ -2,8 +2,6 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\CanvasApiResult;
-
 /**
  * https://canvas.instructure.com/doc/api/courses.html
  */
@@ -11,17 +9,26 @@ class Courses implements CanvasApiClientInterface
 {
     public function listCourses()
     {
-        return new CanvasApiResult($this->get('courses'));
+        return [
+            'courses',
+            'get'
+        ];
     }
 
     public function listCoursesForUser($user_id)
     {
-        return new CanvasApiResult($this->get('users/' . $user_id . '/courses'));
+        return [
+            'users/' . $user_id . '/courses',
+            'get'
+        ];
     }
 
     public function createCourse($account_id)
     {
-        return new CanvasApiResult($this->post('accounts/' . $account_id . '/courses'));
+        return [
+            'accounts/' . $account_id . '/courses',
+            'post'
+        ];
     }
 
     public function uploadFile($course_id)
@@ -38,17 +45,26 @@ class Courses implements CanvasApiClientInterface
 
     public function listUsers($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/students'));
+        return [
+            'courses/' . $course_id . '/students',
+            'get'
+        ];
     }
 
     public function listRecentlyLoggedInStudents($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/recent_students'));
+        return [
+            'courses/' . $course_id . '/recent_students',
+            'get'
+        ];
     }
 
     public function getSingleUser($course_id, $id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/users/' . $id));
+        return [
+            'courses/' . $course_id . '/users/' . $id,
+            'get'
+        ];
     }
 
     // alias
@@ -59,28 +75,43 @@ class Courses implements CanvasApiClientInterface
 
     public function previewProcessedHtml($course_id)
     {
-        return new CanvasApiResult($this->post('courses/' . $course_id . '/preview_html'));
+        return [
+            'courses/' . $course_id . '/preview_html',
+            'post'
+        ];
     }
 
     public function getCourseActivityStream($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/activity_stream'));
+        return [
+            'courses/' . $course_id . '/activity_stream',
+            'get'
+        ];
     }
 
     public function getCourseActivityStreamSummary($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/activity_stream/summary'));
+        return [
+            'courses/' . $course_id . '/activity_stream/summary',
+            'get'
+        ];
     }
 
     public function getCourseTodoItems($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/todo'));
+        return [
+            'courses/' . $course_id . '/todo',
+            'get'
+        ];
     }
 
     public function deleteOrConcludeCourse($course_id)
     {
         $this->setRequiredParameters(['event']);
-        return new CanvasApiResult($this->delete('courses/' . $course_id));
+        return [
+            'courses/' . $course_id,
+            'delete'
+        ];
     }
 
     // helper
@@ -99,47 +130,74 @@ class Courses implements CanvasApiClientInterface
 
     public function getCourseSettings($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/settings'));
+        return [
+            'courses/' . $course_id . '/settings',
+            'get'
+        ];
     }
 
     public function updateCourseSettings($course_id)
     {
-        return new CanvasApiResult($this->put('courses/' . $course_id . '/settings'));
+        return [
+            'courses/' . $course_id . '/settings',
+            'put'
+        ];
     }
 
     public function getCourse($course_id, $account_id = null)
     {
         if (!is_null($account_id)) {
-            return new CanvasApiResult($this->get('accounts/ ' . $account_id . '/courses/' . $course_id));
+            return [
+                'accounts/ ' . $account_id . '/courses/' . $course_id,
+                'get'
+            ];
         }
-        return new CanvasApiResult($this->get('courses/' . $course_id));
+        return [
+            'courses/' . $course_id,
+            'get'
+        ];
     }
 
     public function updateCourse($course_id)
     {
-        return new CanvasApiResult($this->put('courses/' . $course_id));
+        return [
+            'courses/' . $course_id,
+            'put'
+        ];
     }
 
     public function updateCourses($account_id)
     {
         // note, must use the progress endpoint to check the status of this.
         $this->setRequiredParameters(['course_ids', 'event']);
-        return new CanvasApiResult($this->put('accounts/' . $account_id . '/courses'));
+        return [
+            'accounts/' . $account_id . '/courses',
+            'put'
+        ];
     }
 
     public function resetCourse($course_id)
     {
-        return new CanvasApiResult($this->post('courses/' . $course_id . '/reset_content'));
+        return [
+            'courses/' . $course_id . '/reset_content',
+            'post'
+        ];
     }
 
     public function getEffectiveDueDates($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/effective_due_dates'));
+        return [
+            'courses/' . $course_id . '/effective_due_dates',
+            'get'
+        ];
     }
 
     public function getPermissions($course_id)
     {
-        return new CanvasApiResult($this->get('courses/' . $course_id . '/permissions'));
+        return [
+            'courses/' . $course_id . '/permissions',
+            'get'
+        ];
     }
 
     // TODO: deprecated. alias this to the content migrations API
