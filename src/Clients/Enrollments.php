@@ -47,19 +47,19 @@ class Enrollments implements CanvasApiClientInterface
 
     public function enrollUserInCourse($course_id)
     {
-        $this->setRequiredParameters(['enrollment.user_id', 'enrollment.type']);
         return [
             'courses/' . $course_id . '/enrollments',
-            'post'
+            'post',
+            ['enrollment.user_id', 'enrollment.type']
         ];
     }
 
     public function enrollUserInSection($section_id)
     {
-        $this->setRequiredParameters(['enrollment.user_id', 'enrollment.type']);
         return [
             'sections/' . $section_id . '/enrollments',
-            'post'
+            'post',
+            ['enrollment.user_id', 'enrollment.type']
         ];
     }
 
@@ -67,36 +67,8 @@ class Enrollments implements CanvasApiClientInterface
     {
         return [
             'courses/' . $course_id . '/enrollments/' . $id,
-            'delete'
+            'delete',
         ];
-    }
-
-    // helper
-    public function concludeEnrollment($course_id, $id)
-    {
-        $this->setParameters(['task' => 'conclude']);
-        return $this->concludeDeactivateOrDeleteEnrollment($course_id, $id);
-    }
-
-    // helper
-    public function deleteEnrollment($course_id, $id)
-    {
-        $this->setParameters(['task' => 'delete']);
-        return $this->concludeDeactivateOrDeleteEnrollment($course_id, $id);
-    }
-
-    // helper
-    public function deactivateEnrollment($course_id, $id)
-    {
-        $this->setParameters(['task' => 'deactivate']);
-        return $this->concludeDeactivateOrDeleteEnrollment($course_id, $id);
-    }
-
-    // helper, alias for deactivate
-    public function inactivateEnrollment($course_id, $id)
-    {
-        $this->setParameters(['task' => 'inactivate']);
-        return $this->concludeDeactivateOrDeleteEnrollment($course_id, $id);
     }
 
     public function acceptCourseInvitation($course_id, $id)

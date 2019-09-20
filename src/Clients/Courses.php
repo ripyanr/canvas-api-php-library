@@ -107,25 +107,11 @@ class Courses implements CanvasApiClientInterface
 
     public function deleteOrConcludeCourse($course_id)
     {
-        $this->setRequiredParameters(['event']);
         return [
             'courses/' . $course_id,
-            'delete'
+            'delete',
+            ['event']
         ];
-    }
-
-    // helper
-    public function deleteCourse($course_id)
-    {
-        $this->setParameters(['event' => 'delete']);
-        return $this->deleteOrConcludeCourse($course_id);
-    }
-
-    // helper
-    public function concludeCourse($course_id)
-    {
-        $this->setParameters(['event' => 'conclude']);
-        return $this->deleteOrConcludeCourse($course_id);
     }
 
     public function getCourseSettings($course_id)
@@ -169,10 +155,10 @@ class Courses implements CanvasApiClientInterface
     public function updateCourses($account_id)
     {
         // note, must use the progress endpoint to check the status of this.
-        $this->setRequiredParameters(['course_ids', 'event']);
         return [
             'accounts/' . $account_id . '/courses',
-            'put'
+            'put',
+            ['course_ids', 'event']
         ];
     }
 
@@ -201,7 +187,7 @@ class Courses implements CanvasApiClientInterface
     }
 
     // TODO: deprecated. alias this to the content migrations API
-    public function getCoruseCopyStatus($course_id, $id)
+    public function getCourseCopyStatus($course_id, $id)
     {
     }
 

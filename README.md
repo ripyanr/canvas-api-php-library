@@ -353,6 +353,12 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 # Version History
 
+## 0.4.1
+
+- Bugfixes for clients that were still referencing `$this->setParameters()`
+- Elimination of some helper methods that relied on `$this->setParameters()`
+- Some spelling fixes
+
 ## 0.4
 
 - Yet another rewrite...centralizing everything back onto the API class, so that it is essentially all-knowing when a transaction is made.

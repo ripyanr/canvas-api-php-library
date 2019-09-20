@@ -31,10 +31,10 @@ class Quizzes implements CanvasApiClientInterface
 
     public function createQuiz($course_id)
     {
-        $this->setRequiredParameters(['quiz.title']);
         return [
             'courses/' . $course_id . '/quizzes',
-            'post'
+            'post',
+            ['quiz.title']
         ];
     }
 
@@ -56,20 +56,19 @@ class Quizzes implements CanvasApiClientInterface
 
     public function reorderQuizItems($course_id, $id)
     {
-        // TODO: accept wildcards when validating params?
-        // $this->setRequiredParameters(['order']);
         return [
             'courses/' . $course_id . '/quizzes/' . $id . '/reorder',
-            'post'
+            'post',
+        // ['order'] TODO: accept wildcards when validating params?
         ];
     }
 
     public function validateQuizAccessCode($course_id, $id)
     {
-        $this->setRequiredParameters(['access_code']);
         return [
             'courses/' . $course_id . '/quizzes/' . $id . '/validate_access_code',
-            'post'
+            'post',
+            ['access_code']
         ];
     }
 }

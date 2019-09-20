@@ -25,10 +25,10 @@ class Roles implements CanvasApiClientInterface
 
     public function createRole($account_id)
     {
-        $this->setRequiredParameters(['label']);
         return [
             'accounts/' . $account_id . '/roles',
-            'post'
+            'post',
+            ['label']
         ];
     }
 
@@ -50,10 +50,10 @@ class Roles implements CanvasApiClientInterface
 
     public function updateRole($account_id, $id)
     {
-        // $this->setRequiredParameters(['role_id']);
         return [
             'accounts/' . $account_id . '/roles/' . $id,
-            'put'
+            'put',
+            ['role_id']
         ];
     }
 }
