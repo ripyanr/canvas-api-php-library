@@ -353,6 +353,10 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 # Version History
 
+## 0.4.2
+
+- Adds `reactivateEnrollment()` method to `Enrollments` client
+
 ## 0.4.1
 
 - Bugfixes for clients that were still referencing `$this->setParameters()`

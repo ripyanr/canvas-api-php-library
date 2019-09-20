@@ -87,6 +87,14 @@ class Enrollments implements CanvasApiClientInterface
         ];
     }
 
+    public function reactivateEnrollment($course_id, $id)
+    {
+        return [
+            'courses/' . $course_id . '/enrollments/' . $id . '/reactivate',
+            'put'
+        ];
+    }
+
     public function addLastAttendedDateToEnrollment($course_id, $user_id)
     {
         return [
