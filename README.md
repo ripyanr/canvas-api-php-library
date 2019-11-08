@@ -353,6 +353,10 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 # Version History
 
+## 0.5
+
+- Support for multipart (file uploads)
+
 ## 0.4.3
 
 - Adds `Groups` client

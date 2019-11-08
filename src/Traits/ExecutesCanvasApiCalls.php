@@ -44,6 +44,12 @@ trait ExecutesCanvasApiCalls
      */
     protected $requiredParameters = [];
 
+    /**
+     * Multipart data to be sent with the call (e.g. for file uploads)
+     *
+     * @var array
+     */
+    protected $multipart = [];
 
     public function setAdditionalHeaders(array $additionalHeaders)
     {

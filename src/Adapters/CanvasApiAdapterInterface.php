@@ -79,6 +79,14 @@ interface CanvasApiAdapterInterface
      */
     public function getParameter($key);
 
+    /**
+     * Adds multipart data to the call, to support multipart/form-data file uploads
+     *
+     * @param array $multipart
+     * @return self
+     */
+    public function addMultipart(array $multipart);
+
     /*
     |--------------------------------------------------------------------------
     | API Call methods

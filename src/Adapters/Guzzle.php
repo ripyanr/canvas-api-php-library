@@ -37,6 +37,11 @@ class Guzzle implements CanvasApiAdapterInterface
             }
         }
 
+        // multipart
+        if (count($this->multipart) > 0) {
+            $requestOptions['multipart'] = $this->multipart;
+        }
+
         // set proxy settings. set explicitly to empty string if not being used.
         $requestOptions['proxy'] = $this->config->getProxy();
 
