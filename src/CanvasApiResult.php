@@ -107,6 +107,19 @@ class CanvasApiResult
         return $this->content;
     }
 
+    /**
+     * Gets the last code and message.
+     *
+     * @return array
+     */
+    public function getLastResult()
+    {
+        return [
+            'code'   => $this->getLastCall()['response']['code'],
+            'reason' => $this->getLastCall()['response']['reason']
+        ];
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Setters

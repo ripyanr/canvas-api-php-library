@@ -44,9 +44,21 @@ trait SetsCallParameters
         return $this;
     }
 
+    public function setMultipart(array $multipart)
+    {
+        $this->adapter->setMultipart($multipart);
+        return $this;
+    }
+
+    public function addMultipart(array $multipart)
+    {
+        $this->adapter->addMultipart($multipart);
+        return $this;
+    }
+
     public function setParameters(array $parameters)
     {
-        $this->adapter->setParameters([]);
+        $this->adapter->setParameters($parameters);
         return $this;
     }
 

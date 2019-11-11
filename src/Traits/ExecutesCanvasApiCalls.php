@@ -57,6 +57,12 @@ trait ExecutesCanvasApiCalls
         return $this;
     }
 
+    public function addHeaders(array $headers)
+    {
+        $this->additionalHeaders = array_merge($this->additionalHeaders, $headers);
+        return $this;
+    }
+
     public function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
@@ -82,6 +88,18 @@ trait ExecutesCanvasApiCalls
     public function addParameters(array $parameters)
     {
         $this->parameters = array_merge($this->parameters, $parameters);
+        return $this;
+    }
+
+    public function setMultipart(array $multipart)
+    {
+        $this->multipart = $multipart;
+        return $this;
+    }
+
+    public function addMultipart(array $multipart)
+    {
+        $this->multipart = array_merge($this->multipart, $multipart);
         return $this;
     }
 

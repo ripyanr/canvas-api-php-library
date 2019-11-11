@@ -37,6 +37,14 @@ interface CanvasApiAdapterInterface
      */
     public function setRequiredParameters(array $requiredParameters);
 
+    /**
+     * Set $multipart
+     *
+     * @param array $multipart
+     * @return self
+     */
+    public function setMultipart(array $multipart);
+
     /*
     |--------------------------------------------------------------------------
     | Getters
