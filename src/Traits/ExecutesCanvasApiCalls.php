@@ -51,6 +51,13 @@ trait ExecutesCanvasApiCalls
      */
     protected $multipart = [];
 
+    /**
+     * Whether to use the Authorization / Bearer header. Default to true but some calls can disable.
+     *
+     * @var boolean
+     */
+    protected $withAuthorizationHeader = true;
+
     public function setAdditionalHeaders(array $additionalHeaders)
     {
         $this->additionalHeaders = $additionalHeaders;
@@ -100,6 +107,12 @@ trait ExecutesCanvasApiCalls
     public function addMultipart(array $multipart)
     {
         $this->multipart = array_merge($this->multipart, $multipart);
+        return $this;
+    }
+
+    public function withoutAuthorizationHeader()
+    {
+        $this->withAuthorizationHeader = false;
         return $this;
     }
 

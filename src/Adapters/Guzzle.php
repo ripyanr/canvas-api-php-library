@@ -41,17 +41,16 @@ class Guzzle implements CanvasApiAdapterInterface
         $requestOptions['proxy'] = $this->config->getProxy();
 
         // set headers
-        $requestOptions['headers'] = [
-            'Authorization' => 'Bearer ' . $this->config->getToken(),
-        ];
+        if ($this->withAuthorizationHeader) {
+            $requestOptions['headers'] = [
+                'Authorization' => 'Bearer ' . $this->config->getToken(),
+            ];
+        }
 
         // multipart
         if (count($this->multipart) > 0) {
             // Guzzle sets our Content-Type header for us
             $requestOptions['multipart'] = $this->multipart;
-
-            // when doing multipart we do not need the Auth token
-            unset($requestOptions['headers']['Authorization']);
         }
 
         if (count($this->additionalHeaders) > 0) {

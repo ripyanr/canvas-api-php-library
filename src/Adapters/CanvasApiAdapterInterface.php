@@ -45,6 +45,13 @@ interface CanvasApiAdapterInterface
      */
     public function setMultipart(array $multipart);
 
+    /**
+     * How to tell the Adapter to not add the Authorization / Bearer header
+     *
+     * @return self
+     */
+    public function withoutAuthorizationHeader();
+
     /*
     |--------------------------------------------------------------------------
     | Getters
