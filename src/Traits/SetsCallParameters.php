@@ -66,4 +66,16 @@ trait SetsCallParameters
     {
         return $this->adapter->getParameters();
     }
+
+    public function withoutAuthorizationHeader()
+    {
+        $this->adapter->withoutAuthorizationHeader();
+        return $this;
+    }
+
+    public function urlEncodeParameters()
+    {
+        $this->adapter->urlEncodeParameters();
+        return $this;
+    }
 }

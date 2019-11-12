@@ -52,6 +52,13 @@ interface CanvasApiAdapterInterface
      */
     public function withoutAuthorizationHeader();
 
+    /**
+     * Method for telling the Adapter to URL-encode parameters
+     *
+     * @return self
+     */
+    public function urlEncodeParameters();
+
     /*
     |--------------------------------------------------------------------------
     | Getters

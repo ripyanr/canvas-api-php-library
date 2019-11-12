@@ -58,6 +58,13 @@ trait ExecutesCanvasApiCalls
      */
     protected $withAuthorizationHeader = true;
 
+    /**
+     * Override for whether to URL-encode the parameters instead of putting them in the body.
+     *
+     * @var boolean
+     */
+    protected $urlEncodeParameters = false;
+
     public function setAdditionalHeaders(array $additionalHeaders)
     {
         $this->additionalHeaders = $additionalHeaders;
@@ -113,6 +120,12 @@ trait ExecutesCanvasApiCalls
     public function withoutAuthorizationHeader()
     {
         $this->withAuthorizationHeader = false;
+        return $this;
+    }
+
+    public function urlEncodeParameters()
+    {
+        $this->urlEncodeParameters = true;
         return $this;
     }
 

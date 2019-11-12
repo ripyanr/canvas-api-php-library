@@ -422,6 +422,11 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 # Version History
 
+## 0.5.1
+
+- Adds ability to dynamically make call without Authorization / Bearer header
+- Adds ability to dynamically tell Guzzle adapter to URL-encode the params (some POST requests need this)
+
 ## 0.5
 
 - Support for multipart (file uploads). No helpers (yet) to formulate multipart or other data.

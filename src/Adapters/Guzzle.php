@@ -24,7 +24,7 @@ class Guzzle implements CanvasApiAdapterInterface
 
         // params / body
         if (count($this->parameters) > 0) {
-            if (strtolower($method) == 'get') {
+            if (strtolower($method) == 'get' || $this->urlEncodeParameters) {
                 // this is to support include[] and similar...
                 $string = http_build_query($this->parameters, null, '&');
                 $string = preg_replace('/%5B\d+%5D=/', '%5B%5D=', $string);
@@ -96,6 +96,8 @@ class Guzzle implements CanvasApiAdapterInterface
         $this->setParameters([]);
         $this->setMultipart([]);
         $this->setRequiredParameters([]);
+        $this->urlEncodeParameters = false;
+        $this->withAuthorizationHeader = true;
 
         return $calls;
     }
@@ -114,6 +116,7 @@ class Guzzle implements CanvasApiAdapterInterface
         return [
             'request' => [
                 'endpoint'   => $endpoint,
+                'query'      => $requestOptions['query'] ?? '',
                 'method'     => $method,
                 'headers'    => $requestOptions['headers'],
                 'proxy'      => $this->config->getProxy(),
