@@ -190,7 +190,8 @@ class CanvasApiResult
                         $this->content = $call['response']['body'];
                     } else {
                         // some things like enrollment lists are embedded another level deep...
-                        $this->content = array_merge($this->content, array_pop((array) $call['response']['body']));
+                        $bodyArray = (array) $call['response']['body'];
+                        $this->content = array_merge($this->content, array_pop($bodyArray));
                     }
                 } else {
                     $this->content = array_merge($this->content, $call['response']['body']);

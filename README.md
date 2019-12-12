@@ -422,6 +422,10 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 # Version History
 
+## 0.5.2
+
+- Tweaks the way that results are parsed, since some API calls return some strangely-organized entities - for instance, Enrollment Terms are wrapped in a parent object - so this is a low-hanging-fruit approach to sniff this out. If issues persist, we may need to be a bit more explicit and start writing result-parser classes for each Client.
+
 ## 0.5.1
 
 - Adds ability to dynamically make call without Authorization / Bearer header
