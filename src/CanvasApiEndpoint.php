@@ -26,11 +26,19 @@ class CanvasApiEndpoint
      */
     protected $requiredParameters;
 
-    public function __construct(string $endpoint, string $method, array $requiredParameters = [])
+    /**
+     * Whether to interpret the first $endpoint argument as a raw endpoint (default is to calculate it based on CanvasApiConfig)
+     *
+     * @var false
+     */
+    protected $rawEndpoint;
+
+    public function __construct(string $endpoint, string $method, array $requiredParameters = [], bool $rawEndpoint = false)
     {
         $this->endpoint = $endpoint;
         $this->method = $method;
         $this->requiredParameters = $requiredParameters;
+        $this->rawEndpoint = $rawEndpoint;
     }
 
     /**
@@ -60,7 +68,10 @@ class CanvasApiEndpoint
     public function setFinalEndpoint(CanvasApiConfig $config)
     {
         // assemble the final request URI from host and endpoint
-        $this->endpoint = 'https://' . $config->getApiHost() . $config->getPrefix() . $this->endpoint;
+        if (!$this->rawEndpoint) {
+            $this->endpoint = 'https://' . $config->getApiHost() . $config->getPrefix() . $this->endpoint;
+        }
+
         return $this;
     }
 }

@@ -44,10 +44,36 @@ trait ExecutesCanvasApiCalls
      */
     protected $requiredParameters = [];
 
+    /**
+     * Multipart data to be sent with the call (e.g. for file uploads)
+     *
+     * @var array
+     */
+    protected $multipart = [];
+
+    /**
+     * Whether to use the Authorization / Bearer header. Default to true but some calls can disable.
+     *
+     * @var boolean
+     */
+    protected $withAuthorizationHeader = true;
+
+    /**
+     * Override for whether to URL-encode the parameters instead of putting them in the body.
+     *
+     * @var boolean
+     */
+    protected $urlEncodeParameters = false;
 
     public function setAdditionalHeaders(array $additionalHeaders)
     {
         $this->additionalHeaders = $additionalHeaders;
+        return $this;
+    }
+
+    public function addHeaders(array $headers)
+    {
+        $this->additionalHeaders = array_merge($this->additionalHeaders, $headers);
         return $this;
     }
 
@@ -76,6 +102,30 @@ trait ExecutesCanvasApiCalls
     public function addParameters(array $parameters)
     {
         $this->parameters = array_merge($this->parameters, $parameters);
+        return $this;
+    }
+
+    public function setMultipart(array $multipart)
+    {
+        $this->multipart = $multipart;
+        return $this;
+    }
+
+    public function addMultipart(array $multipart)
+    {
+        $this->multipart = array_merge($this->multipart, $multipart);
+        return $this;
+    }
+
+    public function withoutAuthorizationHeader()
+    {
+        $this->withAuthorizationHeader = false;
+        return $this;
+    }
+
+    public function urlEncodeParameters()
+    {
+        $this->urlEncodeParameters = true;
         return $this;
     }
 

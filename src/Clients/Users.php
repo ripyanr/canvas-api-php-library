@@ -97,6 +97,12 @@ class Users implements CanvasApiClientInterface
         ];
     }
 
+    // alias
+    public function getUser($id = 'self')
+    {
+        return $this->showUserDetails($id);
+    }
+
     public function createUser($account_id)
     {
         return [
@@ -270,7 +276,8 @@ class Users implements CanvasApiClientInterface
     public function getCourseNickname($course_id)
     {
         return [
-            'users/self/course_nicknames/' . $course_id, 'get'
+            'users/self/course_nicknames/' . $course_id,
+            'get'
         ];
     }
 
@@ -286,7 +293,8 @@ class Users implements CanvasApiClientInterface
     public function removeCourseNickname($course_id)
     {
         return [
-            'users/self/course_nicknames/' . $course_id, 'delete'
+            'users/self/course_nicknames/' . $course_id,
+            'delete'
         ];
     }
 

@@ -316,6 +316,75 @@ If you need to use an HTTP proxy, set that up in your `CanvasApiConfig` object u
 
 If you need to set additional headers on your requests, you can utilize the `setAdditionalHeaders()` method on the client class, which accepts an array of key-value pairs.
 
+## File uploads (multipart data)
+
+This library accommodates the POST method of uploading, as per [Canvas documentation on file uploads](https://canvas.instructure.com/doc/api/file.file_uploads.html). This process is broken into 2 (or 3) steps:
+
+1. The first API call will "inform" Canvas that you are going to upload a file, and tell it what the file will look like (type of file, desired filename, size, etc.)
+2. Canvas will pass back a URL to which the file itself will actually be sent, and a second API call will actually send the data via a multipart form request
+3. If the request results in a response code of `3xx` then a third call needs to be made to "finalize" the transaction.
+
+Using this library, you will be able to upload files by doing the following:
+
+* Calling the `uploadFile()` method in the `Files` client, and supplying the `name`, `size`, and `content_type` parameters.
+* Inspecting the result to get the new POST URL for the file, as well as the `upload_params`.
+* Forming a valid multipart array from the `upload_params`, and appending `file`. One example of a valid array using the included Guzzle adapter:
+
+```
+[
+    [
+        'name' => 'filename',
+        'contents' => 'myfile.jpg',
+    ],
+    [
+        'name' => 'content_type',
+        'contents' => 'image/jpeg',
+    ],
+    [
+        'name' => 'file',
+        'contents' => fopen('/path/to/file', 'r'),
+    ],
+]
+```
+
+* Add the multipart data to the request and execute a call to `uploadFileToUploadUrl()` using the URL given to you.
+
+* if you receive a `3xx` response code, follow the Location header and make a GET request to finalize the transaction. You can do this using the `Base` client.
+
+The process could look like:
+
+```php
+use Uncgits\CanvasApi\CanvasApi;
+
+$api = new CanvasApi([
+    'config' = new \App\CanvasConfigs\TestEnvironment::class;
+    'adapter' = new \Uncgits\CanvasApi\Adapters\Guzzle::class;
+    'client' = new \Uncgits\CanvasApi\Clients\Files::class;
+]);
+
+$result = $api->addParameters(['name' => 'myfile.jpg', 'size' => '100000', 'content_type' => 'image/jpeg']->uploadFile($folderId); // you may need to act-as the user here too.
+
+// parse out the data
+$url = $result->getContent()->upload_url;
+$multipartArray = (array) $result->getContent()->upload_params;
+$multipartArray['file'] = fopen('/path/to/file.jpg', 'r');
+
+// create a valid multipart array for Guzzle
+$multipartArray = array_map(function ($value, $key) {
+    return ['name' => $key, 'contents' => $value];
+}, $multipartArray, array_keys($multipartArray));
+
+// upload the file
+$uploadResult = $api->addMultipart($multipartArray)->uploadFileToUploadUrl($url);
+
+// finalize if needed
+$code = $uploadResult->getLastResult()['code'];
+if ($code >= 300 && $code < 400) {
+    $location = $uploadResult->getLastCall()['headers']['Location'];
+    $finalizeResult = $api->using('base')->makeCallToRawUrl($location, 'get');
+}
+```
+
 # Writing your own Adapters
 
 An adapter is responsible for everything involved in the actual interaction with the Canvas API. The Adapter's responsibilities include:
@@ -353,11 +422,37 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 # Version History
 
+## 0.5.1
+
+- Adds ability to dynamically make call without Authorization / Bearer header
+- Adds ability to dynamically tell Guzzle adapter to URL-encode the params (some POST requests need this)
+
+## 0.5
+
+- Support for multipart (file uploads). No helpers (yet) to formulate multipart or other data.
+- Adds `getLastResult()` to `CanvasApiResult` class, which outputs the code and reason of the last call.
+
+## 0.4.3
+
+- Adds `Groups` client
+
+## 0.4.2
+
+- Adds `reactivateEnrollment()` method to `Enrollments` client
+
+## 0.4.1
+
+- Bugfixes for clients that were still referencing `$this->setParameters()`
+- Elimination of some helper methods that relied on `$this->setParameters()`
+- Some spelling fixes
+
 ## 0.4
 
-- Yet another rewrite.
-- Centralizing everything back onto the API class, so that it is essentially all-knowing when a transaction is made.
+- Yet another rewrite...centralizing everything back onto the API class, so that it is essentially all-knowing when a transaction is made.
 - simplify `execute()` method for easy overwriting in wrapper classes
+- adds clients:
+    - SIS Imports
+    - SIS Import Errors
 
 ## 0.3
 

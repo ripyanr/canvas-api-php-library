@@ -41,20 +41,19 @@ class QuizSubmissions implements CanvasApiClientInterface
 
     public function updateStudentQuestionScoresAndComments($course_id, $quiz_id, $id)
     {
-        //TODO: wildcard parameter validation
-        // $this->setRequiredParameters(['quiz_submissions.*.attempt']);
         return [
             'courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions/' . $id,
-            'put'
+            'put',
+            // ['quiz_submissions.*.attempt'], //TODO: wildcard parameter validation
         ];
     }
 
     public function completeQuizSubmission($course_id, $quiz_id, $id)
     {
-        $this->setRequiredParameters(['attempt', 'validation_token']);
         return [
             'courses/' . $course_id . '/quizzes/' . $quiz_id . '/submissions/' . $id . '/complete',
-            'post'
+            'post',
+            ['attempt', 'validation_token']
         ];
     }
 

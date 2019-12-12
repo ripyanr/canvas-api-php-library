@@ -53,10 +53,10 @@ class Assignments implements CanvasApiClientInterface
 
     public function createAssignment($course_id)
     {
-        $this->setRequiredParameters(['assignment.name']);
         return [
             'courses/' . $course_id . '/assignments',
-            'post'
+            'post',
+            ['assignment.name']
         ];
     }
 

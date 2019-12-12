@@ -44,14 +44,38 @@ trait SetsCallParameters
         return $this;
     }
 
+    public function setMultipart(array $multipart)
+    {
+        $this->adapter->setMultipart($multipart);
+        return $this;
+    }
+
+    public function addMultipart(array $multipart)
+    {
+        $this->adapter->addMultipart($multipart);
+        return $this;
+    }
+
     public function setParameters(array $parameters)
     {
-        $this->adapter->setParameters([]);
+        $this->adapter->setParameters($parameters);
         return $this;
     }
 
     public function getParameters()
     {
         return $this->adapter->getParameters();
+    }
+
+    public function withoutAuthorizationHeader()
+    {
+        $this->adapter->withoutAuthorizationHeader();
+        return $this;
+    }
+
+    public function urlEncodeParameters()
+    {
+        $this->adapter->urlEncodeParameters();
+        return $this;
     }
 }

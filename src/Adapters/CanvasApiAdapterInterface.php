@@ -37,6 +37,28 @@ interface CanvasApiAdapterInterface
      */
     public function setRequiredParameters(array $requiredParameters);
 
+    /**
+     * Set $multipart
+     *
+     * @param array $multipart
+     * @return self
+     */
+    public function setMultipart(array $multipart);
+
+    /**
+     * How to tell the Adapter to not add the Authorization / Bearer header
+     *
+     * @return self
+     */
+    public function withoutAuthorizationHeader();
+
+    /**
+     * Method for telling the Adapter to URL-encode parameters
+     *
+     * @return self
+     */
+    public function urlEncodeParameters();
+
     /*
     |--------------------------------------------------------------------------
     | Getters
@@ -78,6 +100,14 @@ interface CanvasApiAdapterInterface
      * @return mixed
      */
     public function getParameter($key);
+
+    /**
+     * Adds multipart data to the call, to support multipart/form-data file uploads
+     *
+     * @param array $multipart
+     * @return self
+     */
+    public function addMultipart(array $multipart);
 
     /*
     |--------------------------------------------------------------------------
