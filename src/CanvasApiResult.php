@@ -185,7 +185,14 @@ class CanvasApiResult
 
             if (isset($call['response']['body']) && !empty($call['response']['body'])) {
                 if (is_object($call['response']['body'])) {
-                    $this->content = $call['response']['body'];
+                    if (isset($call['response']['body']->id) || isset($call['response']['body']->errors)) {
+                        // handle single results or errors
+                        $this->content = $call['response']['body'];
+                    } else {
+                        // some things like enrollment lists are embedded another level deep...
+                        $bodyArray = (array) $call['response']['body'];
+                        $this->content = array_merge($this->content, array_pop($bodyArray));
+                    }
                 } else {
                     $this->content = array_merge($this->content, $call['response']['body']);
                 }
