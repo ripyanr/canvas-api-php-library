@@ -432,6 +432,10 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 # Version History
 
+## 0.6.1
+
+- Adds missing call to get user profile (`Users` client)
+
 ## 0.6
 
 - Adds true support for maximum results (capping resultset size).

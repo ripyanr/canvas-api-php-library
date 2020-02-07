@@ -222,6 +222,20 @@ class Users implements CanvasApiClientInterface
         ];
     }
 
+    public function getUserProfile($user_id = 'self')
+    {
+        return [
+            'users/' . $user_id . '/profile',
+            'get'
+        ];
+    }
+
+    // alias
+    public function getProfile($user_id = 'self')
+    {
+        return $this->getUserProfile($user_id);
+    }
+
     public function listAvatarOptions($user_id = 'self')
     {
         return [
