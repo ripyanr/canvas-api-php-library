@@ -98,6 +98,12 @@ class CanvasApi
 
     public function __call($method, $arguments)
     {
+        // is it a method on the Config class?
+        if (method_exists($this->config, $method)) {
+            $this->config->$method(...$arguments);
+            return $this;
+        }
+
         // determine active client
         $activeClient = $this->tempClient ?: $this->client;
 
@@ -117,6 +123,9 @@ class CanvasApi
 
     public function execute(CanvasApiClientInterface $client, CanvasApiEndpoint $endpoint, $method, $arguments)
     {
-        return new CanvasApiResult($this->adapter->usingConfig($this->config)->transaction($endpoint));
+        return new CanvasApiResult(
+            $this->adapter->usingConfig($this->config)->transaction($endpoint),
+            $this->config
+        );
     }
 }

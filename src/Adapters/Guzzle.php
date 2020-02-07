@@ -73,14 +73,21 @@ class Guzzle implements CanvasApiAdapterInterface
         return $this;
     }
 
-    public function transaction(CanvasApiEndpoint $endpoint, $calls = [])
+    public function transaction(CanvasApiEndpoint $endpoint, $calls = [], $resultCount = 0)
     {
         // set up
         $this->validateParameters($endpoint);
 
         // make the call(s)
         $calls[] = $result = $this->call($endpoint->getEndpoint(), $endpoint->getMethod());
-        if (!is_null($result['response']['pagination'])) {
+        $resultCount += count($result['response']['body']);
+
+        $underMaxResults = true;
+        if ($resultCount >= $this->config->getMaxResults()) {
+            $underMaxResults = false;
+        }
+
+        if (!is_null($result['response']['pagination']) && $underMaxResults) {
             if (isset($result['response']['pagination']['next']) || $result['response']['pagination']['current'] != $result['response']['pagination']['last']) {
                 $nextEndpoint = new CanvasApiEndpoint(
                     str_replace($this->config->getPrefix(), '', $result['response']['pagination']['next']),
@@ -88,7 +95,7 @@ class Guzzle implements CanvasApiAdapterInterface
                     $endpoint->getRequiredParameters()
                 );
 
-                return $this->transaction($nextEndpoint->setFinalEndpoint($this->config), $calls);
+                return $this->transaction($nextEndpoint->setFinalEndpoint($this->config), $calls, $resultCount);
             }
         }
 
