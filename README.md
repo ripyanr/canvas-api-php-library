@@ -308,6 +308,16 @@ This library is meant to act as an interface to the Canvas REST API; therefore i
 
 As a convenience, rate limit information is provided in the base level array of each API call result (see above), so that you do not need to parse through headers yourself.
 
+### Capping resultset size (Max Results)
+
+By default the package ships with a somewhat-sensible default of 9999 maximum results per transaction. Generally speaking, if you're needing more records than this at a time, there is likely a better way to go about getting them (via search query parameters, etc.) than making 100+ paginated API calls. However, you're free to override this to the limits of your imagination (and system memory, and rate limit).
+
+```php
+$config->setMaxResults(250);
+// OR...
+$api->using('users')->setMaxResults(250)->listUserPageViews('jdoe1'); // calling this on the API class will trickle through to the config class (assuming it is set)
+```
+
 ## Using a proxy
 
 If you need to use an HTTP proxy, set that up in your `CanvasApiConfig` object using `setProxyHost()`, `setProxyPort()`, and `useProxy()`.
@@ -421,6 +431,10 @@ If you need additional functionality like logging or caching, you can write your
 Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo (if able).
 
 # Version History
+
+## 0.6
+
+- Adds true support for maximum results (capping resultset size).
 
 ## 0.5.2
 
