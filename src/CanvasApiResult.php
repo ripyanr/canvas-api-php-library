@@ -209,7 +209,7 @@ class CanvasApiResult
         }
 
         // trim results if we only asked for X (silly, yes... but...)
-        if (count($this->content) > $this->config->getMaxResults()) {
+        if (is_array($this->content) && (count($this->content) > $this->config->getMaxResults())) {
             $this->content = array_slice($this->content, 0, $this->config->getMaxResults());
         }
 
