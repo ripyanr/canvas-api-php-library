@@ -41,6 +41,13 @@ class CanvasApiResult
      */
     protected $content = [];
 
+    /**
+     * The Canvas API configuration used to generate this resultset
+     *
+     * @var CanvasApiConfig
+     */
+    protected $config;
+
     /*
     |--------------------------------------------------------------------------
     | Getters
@@ -165,8 +172,10 @@ class CanvasApiResult
         return $this;
     }
 
-    public function __construct(array $calls)
+    public function __construct(array $calls, CanvasApiConfig $config)
     {
+        // set config
+        $this->config = $config;
         // set the calls
         $this->setCalls($calls);
         // parse calls to get results and content
@@ -199,10 +208,15 @@ class CanvasApiResult
             }
         }
 
+        // trim results if we only asked for X (silly, yes... but...)
+        if (count($this->content) > $this->config->getMaxResults()) {
+            $this->content = array_slice($this->content, 0, $this->config->getMaxResults());
+        }
+
         $this->status = empty($failedCalls) ? 'success' : 'error';
         $this->message = empty($failedCalls) ?
-                count($this->calls) . ' call(s) successful.' :
-                count($failedCalls) . ' call(s) had errors.';
+            count($this->calls) . ' call(s) successful.' :
+            count($failedCalls) . ' call(s) had errors.';
 
         return $this;
     }

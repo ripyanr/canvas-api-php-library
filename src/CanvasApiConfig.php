@@ -58,11 +58,11 @@ abstract class CanvasApiConfig
     private $useProxy = false;
 
     /**
-     * Fixed limit on the number of results to return from the API. 0 is unlimited.
+     * Fixed limit on the number of results to return from the API. Default is 9999, but should be overridden where appropriate.
      *
      * @var integer
      */
-    private $maxResults = 0;
+    private $maxResults = 9999;
 
     /*
     |--------------------------------------------------------------------------
