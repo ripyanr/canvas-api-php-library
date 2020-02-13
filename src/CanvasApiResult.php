@@ -198,9 +198,9 @@ class CanvasApiResult
                         // handle single results or errors
                         $this->content = $call['response']['body'];
                     } else {
-                        // some things like enrollment lists are embedded another level deep...
+                        // some things like enrollment lists and errors are embedded another level deep...
                         $bodyArray = (array) $call['response']['body'];
-                        $this->content = array_merge($this->content, array_pop($bodyArray));
+                        $this->content = array_merge($this->content, $bodyArray);
                     }
                 } else {
                     $this->content = array_merge($this->content, $call['response']['body']);
