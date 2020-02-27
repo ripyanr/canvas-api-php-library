@@ -432,6 +432,10 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 # Version History
 
+## 0.6.5
+
+- adds External Tool client
+
 ## 0.6.4
 
 - actual bugfix for getting an error message back from the API.
