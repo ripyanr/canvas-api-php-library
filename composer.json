@@ -28,7 +28,7 @@
         "guzzlehttp/guzzle": "6.* recommended to make HTTP request with Guzzle adapter"
     },
     "autoload": {
-        "psr-0": {
+        "psr-4": {
             "Uncgits\\CanvasApi\\": "src/"
         }
     }
