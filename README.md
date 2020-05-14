@@ -432,6 +432,10 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 # Version History
 
+## 0.6.7
+
+- adds Quiz Submission Events API
+
 ## 0.6.6
 
 - change to PSR-4 declaration since we were already following it
