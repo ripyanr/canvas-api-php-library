@@ -434,7 +434,8 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 ## 0.6.7
 
-- adds Quiz Submission Events API
+- adds Quiz Submission Events client
+- adds Feature Flags client
 
 ## 0.6.6
 
