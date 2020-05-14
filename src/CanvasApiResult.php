@@ -195,8 +195,8 @@ class CanvasApiResult
             if (isset($call['response']['body']) && !empty($call['response']['body'])) {
                 $body = $call['response']['body'];
                 if (is_object($body)) {
-                    if (isset($body->id) || isset($body->errors) || isset($body->message)) {
-                        // handle single results or errors
+                    if (isset($body->id) || isset($body->feature) || isset($body->errors) || isset($body->message)) {
+                        // handle single results or errors. special handling for "feature" (feature flags API)
                         $this->content = $body;
                     } else {
                         // some things like enrollment lists are embedded another level deep...

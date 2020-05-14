@@ -436,6 +436,7 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 - adds Quiz Submission Events client
 - adds Feature Flags client
+- adds special result handling for detecting a single feature flag
 
 ## 0.6.6
 
