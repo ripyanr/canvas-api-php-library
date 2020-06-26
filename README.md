@@ -1,16 +1,10 @@
 # Canvas API PHP Library
 
-Contact: its-laravel-devs-l@uncg.edu
-
-# Introduction
-
 This package is a PHP library used to interact with the [Canvas REST API](https://canvas.instructure.com/doc/api/index.html).
 
 ## Scope
 
-This package is not (yet) as a comprehensive interface with the Canvas API - it is not written to perform every conceivable API call to Canvas. Currently, this package suits the specific needs of UNC Greensboro's Canvas integrations, and performs only the functions necessary for day-to-day operations thereof.
-
-It is intended for internal use - if you are external to UNCG please feel free to fork this package and modify it to suit your needs.
+This package is not (yet) as a comprehensive interface with the Canvas API. If you would like to contribute additional functionality to this library, pull requests are very welcome.
 
 # Installation and Quick Start
 
@@ -426,11 +420,27 @@ Theoretically this API library will be complete at some point, and so writing cu
 
 If you need additional functionality like logging or caching, you can write your own `CanvasApi` wrapper class that extends this `CanvasApi` class. The most common use cases would be to set some default values for the Config and Adapter classes, perhaps in the constructor, or to override the `execute()` method to perform additional operations before the transaction is kicked off or after it is finished.
 
+---
+
+# Contributing
+
+Please feel free to submit a pull request to this package to help improve its coverage of the Canvas API, and/or to add Adapters or fix issues. The package was initially built to serve the needs of UNC Greensboro's immediate needs around Canvas integration, ad hoc, and is therefore not yet comprehensive.
+
+# License
+
+See the [LICENSE](LICENSE.md) file for license rights and limitations (BSD).
+
 # Questions? Concerns?
 
-Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo (if able).
+Please use the Issue Tracker on this repository for reporting bugs. For security-related concerns, please contact its-laravel-devs-l@uncg.edu directly instead of using the Issue Tracker.
+
+---
 
 # Version History
+
+## 1.0
+
+- Official open source licensing
 
 ## 0.6.7
 
