@@ -193,23 +193,24 @@ class CanvasApiResult
             }
 
             if (isset($call['response']['body']) && !empty($call['response']['body'])) {
-                if (is_object($call['response']['body'])) {
-                    if (isset($call['response']['body']->id) || isset($call['response']['body']->errors)) {
-                        // handle single results or errors
-                        $this->content = $call['response']['body'];
+                $body = $call['response']['body'];
+                if (is_object($body)) {
+                    if (isset($body->id) || isset($body->feature) || isset($body->errors) || isset($body->message)) {
+                        // handle single results or errors. special handling for "feature" (feature flags API)
+                        $this->content = $body;
                     } else {
                         // some things like enrollment lists are embedded another level deep...
-                        $bodyArray = (array) $call['response']['body'];
+                        $bodyArray = (array) $body;
                         $this->content = array_merge($this->content, array_pop($bodyArray));
                     }
                 } else {
-                    $this->content = array_merge($this->content, $call['response']['body']);
+                    $this->content = array_merge($this->content, $body);
                 }
             }
         }
 
         // trim results if we only asked for X (silly, yes... but...)
-        if (count($this->content) > $this->config->getMaxResults()) {
+        if (is_array($this->content) && (count($this->content) > $this->config->getMaxResults())) {
             $this->content = array_slice($this->content, 0, $this->config->getMaxResults());
         }
 

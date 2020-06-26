@@ -432,6 +432,36 @@ Please contact us at its-laravel-devs-l@uncg.edu, or open an issue on this repo 
 
 # Version History
 
+## 0.6.7
+
+- adds Quiz Submission Events client
+- adds Feature Flags client
+- adds special result handling for detecting a single feature flag
+
+## 0.6.6
+
+- change to PSR-4 declaration since we were already following it
+
+## 0.6.5
+
+- adds External Tool client
+
+## 0.6.4
+
+- actual bugfix for getting an error message back from the API.
+
+## 0.6.3
+
+- bugfix for getting an error message back from an API
+
+## 0.6.2
+
+- bugfixes for max results when only a single record is returned
+
+## 0.6.1
+
+- Adds missing call to get user profile (`Users` client)
+
 ## 0.6
 
 - Adds true support for maximum results (capping resultset size).

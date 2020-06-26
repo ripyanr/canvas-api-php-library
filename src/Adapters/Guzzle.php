@@ -80,7 +80,12 @@ class Guzzle implements CanvasApiAdapterInterface
 
         // make the call(s)
         $calls[] = $result = $this->call($endpoint->getEndpoint(), $endpoint->getMethod());
-        $resultCount += count($result['response']['body']);
+
+        if (is_array($result['response']['body'])) {
+            $resultCount += count($result['response']['body']);
+        } else {
+            $resultCount++;
+        }
 
         $underMaxResults = true;
         if ($resultCount >= $this->config->getMaxResults()) {
