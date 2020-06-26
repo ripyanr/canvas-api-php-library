@@ -438,6 +438,10 @@ Please use the Issue Tracker on this repository for reporting bugs. For security
 
 # Version History
 
+## 1.0.1
+
+- Adds BSD license info to `composer.json`
+
 ## 1.0
 
 - Official open source licensing
