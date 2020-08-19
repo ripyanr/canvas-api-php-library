@@ -195,8 +195,9 @@ class CanvasApiResult
             if (isset($call['response']['body']) && !empty($call['response']['body'])) {
                 $body = $call['response']['body'];
                 if (is_object($body)) {
-                    if (isset($body->id) || isset($body->feature) || isset($body->errors) || isset($body->message)) {
-                        // handle single results or errors. special handling for "feature" (feature flags API)
+                    if (isset($body->id) || isset($body->feature) || isset($body->errors) || isset($body->message) || isset($body->delete) || isset($body->conclude)) {
+                        // handle single results or errors.
+                        // also special handling for "feature" (feature flags API), and delete/conclude (course deletion API)... TODO: how to handle this better?
                         $this->content = $body;
                     } else {
                         // some things like enrollment lists are embedded another level deep...

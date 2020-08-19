@@ -16,7 +16,7 @@ If you are using the built-in Guzzle driver, you will also need to make sure you
 
 ### Create a config object
 
-Create a class in your application that extends `Uncgits\CanvasApi\CanvasApiConfig`. Then, on `__construct()`, utilize `$this->setApiHost()` and `$this->setToken()` methods to set up your API credentials. Example:
+Create a class in your application that extends `Uncgits\CanvasApi\CanvasApiConfig`. Then, on `__construct()`, utilize `$this->setApiHost()` and `$this->setToken()` methods to set up your API credentials. Most likely, you'll use environment variables here, or a reference to a non-committed class or file containing your credentials. Example:
 
 ```php
 <?php
@@ -29,8 +29,8 @@ class TestEnvironment extends CanvasApiConfig
 {
     public function __construct()
     {
-        $this->setApiHost('someplace.test.instructure.com');
-        $this->setToken('super-secret-token-that-you-would-reference-from-a-non-committed-file-of-course'); // please don't commit your token...
+        $this->setApiHost(getenv('CANVAS_DOMAIN'));
+        $this->setToken(getenv('CANVAS_TOKEN'));
     }
 }
 ```
@@ -437,6 +437,11 @@ Please use the Issue Tracker on this repository for reporting bugs. For security
 ---
 
 # Version History
+
+## 1.0.2
+
+- Adds additional handling in `CanvasApiResult` for more single-member object results. This will likely need further examination but works for now.
+- Readme tweaks for clarity in installation / use
 
 ## 1.0.1
 
