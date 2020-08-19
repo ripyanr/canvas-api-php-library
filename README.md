@@ -438,6 +438,11 @@ Please use the Issue Tracker on this repository for reporting bugs. For security
 
 # Version History
 
+## 1.0.2
+
+- Adds additional handling in `CanvasApiResult` for more single-member object results. This will likely need further examination but works for now.
+- Readme tweaks for clarity in installation / use
+
 ## 1.0.1
 
 - Adds BSD license info to `composer.json`
