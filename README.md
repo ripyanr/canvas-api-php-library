@@ -438,6 +438,10 @@ Please use the Issue Tracker on this repository for reporting bugs. For security
 
 # Version History
 
+## 1.0.3
+
+- Adds handling in `CanvasApiResult` for the 'quota' key being handled as a single result
+
 ## 1.0.2
 
 - Adds additional handling in `CanvasApiResult` for more single-member object results. This will likely need further examination but works for now.
