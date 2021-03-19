@@ -438,6 +438,11 @@ Please use the Issue Tracker on this repository for reporting bugs. For security
 
 # Version History
 
+## 1.1
+
+- Fixes parameter ordering issue in `Users` client, which is deprecated in PHP 8
+- Adjusts PHP version constraints specifically so that issues like this will be addressed in future major PHP version releases
+
 ## 1.0.3
 
 - Adds handling in `CanvasApiResult` for the 'quota' key being handled as a single result
