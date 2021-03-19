@@ -145,14 +145,14 @@ class Users implements CanvasApiClientInterface
         ];
     }
 
-    public function getCustomColor($id = 'self', $asset_string)
+    public function getCustomColor($id = 'self', $asset_string = '')
     {
         return [
             'users/' . $id . '/colors/' . $asset_string, 'get'
         ];
     }
 
-    public function updateCustomColor($id = 'self', $asset_string)
+    public function updateCustomColor($id = 'self', $asset_string = '')
     {
         return [
             'users/' . $id . '/colors/' . $asset_string, 'put'
