@@ -1,4 +1,4 @@
-# Canvas API PHP Library
+# Canvas API PHP Library [(Orginal Repository)](https://bitbucket.org/uncg-its/canvas-api-php-library/src/master)
 
 This package is a PHP library used to interact with the [Canvas REST API](https://canvas.instructure.com/doc/api/index.html).
 
