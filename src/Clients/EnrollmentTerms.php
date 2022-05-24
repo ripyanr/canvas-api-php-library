@@ -38,4 +38,12 @@ class EnrollmentTerms implements CanvasApiClientInterface
             'get'
         ];
     }
+
+    public function retrieveEnrollmentTerm($account_id, $id)
+    {
+        return [
+            'accounts/'.$account_id.'/terms/'.$id,
+            'get'
+        ];
+    }
 }
