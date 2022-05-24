@@ -199,10 +199,12 @@ class CanvasApiResult
                         // handle single results or errors.
                         // also special handling for "feature" (feature flags API), and delete/conclude (course deletion API)... TODO: how to handle this better?
                         $this->content = $body;
-                    } else {
+                    } elseif(is_countable($body)) {
                         // some things like enrollment lists are embedded another level deep...
                         $bodyArray = (array) $body;
                         $this->content = array_merge($this->content, array_pop($bodyArray));
+                    }else{
+                        $this->content = $body;
                     }
                 } else {
                     $this->content = array_merge($this->content, $body);
