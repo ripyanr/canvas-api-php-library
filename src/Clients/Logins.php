@@ -2,8 +2,6 @@
 
 namespace Uncgits\CanvasApi\Clients;
 
-use Uncgits\CanvasApi\Clients\CanvasApiClientInterface;
-
 /**
  * https://canvas.instructure.com/doc/api/users.html
  */
