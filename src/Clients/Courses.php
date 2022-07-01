@@ -186,6 +186,16 @@ class Courses implements CanvasApiClientInterface
         ];
     }
 
+    public function getUserProgress($course_id, $user_id)
+    {
+        return [
+            'courses/' . $course_id . '/users/' . $user_id . '/progress',
+            'get'
+        ];
+    }
+
+    
+
     // TODO: deprecated. alias this to the content migrations API
     public function getCourseCopyStatus($course_id, $id)
     {
